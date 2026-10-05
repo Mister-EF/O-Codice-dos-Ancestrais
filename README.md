@@ -41,6 +41,7 @@ Para diversificar o gameplay além do tradicional jogo da memória e estimular d
 
 ---
 
+## Finalidade
 Desenvolvido como projeto pelo Senai Félix Guisard para a matéria de DevOps:
 
 ## Docente
