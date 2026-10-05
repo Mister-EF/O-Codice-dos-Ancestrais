@@ -37,7 +37,7 @@ Para diversificar o gameplay além do tradicional jogo da memória e estimular d
 ---
 
 ## 🚀 Próximos Passos (Roadmap)
-- [ ] Definição oficial da stack tecnológica (Godot Engine / Roblox / Web).
+- [✅] Definição oficial da stack tecnológica (Godot Engine).
 - [ ] Prototipagem do tabuleiro de associação de cartas (*Memory Stack*).
 - [ ] Implementação do sistema de escolha de facções.
 - [ ] Desenvolvimento dos mini-puzzles complementares.
