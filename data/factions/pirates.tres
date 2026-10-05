@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="FactionData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/faction_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"pirates"
+name_key = "faction.pirates.name"
+description_key = "faction.pirates.desc"
+bonus_key = "faction.pirates.bonus"
+theme_color = Color(0.2, 0.6, 0.9, 1)
+hint_discount = 0
+time_bonus_seconds = 0.0
+extra_flip_allowance = 2

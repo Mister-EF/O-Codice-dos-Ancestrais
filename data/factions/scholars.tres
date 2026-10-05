@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="FactionData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/faction_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"scholars"
+name_key = "faction.scholars.name"
+description_key = "faction.scholars.desc"
+bonus_key = "faction.scholars.bonus"
+theme_color = Color(0.6, 0.4, 0.8, 1)
+hint_discount = 25
+time_bonus_seconds = 0.0
+extra_flip_allowance = 0
