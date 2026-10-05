@@ -1,4 +1,7 @@
 # O Códice dos Ancestrais
+
+![Logo Inicial do jogo](logo/Logo%20incial.png)
+
 Puzzle-RPG medieval tecnológico onde o *Caos Digital* espalhou os segredos do **Códice dos Ancestrais**. Escolha sua facção, navegue por ilhas, templos e castelos, resolva puzzles de tecnologia e restaure o equilíbrio do reino de Eldoria.
 
 ---
