@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ConceptData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/concept_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"nosql"
+name_key = "concept.nosql.name"
+definition_key = "concept.nosql.definition"
+hint_key = "concept.nosql.hint"
+category = &"data"

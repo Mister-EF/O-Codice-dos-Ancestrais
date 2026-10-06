@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ConceptData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/concept_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"cloud"
+name_key = "concept.cloud.name"
+definition_key = "concept.cloud.definition"
+hint_key = "concept.cloud.hint"
+category = &"infrastructure"

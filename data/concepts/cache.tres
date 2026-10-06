@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ConceptData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/concept_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"cache"
+name_key = "concept.cache.name"
+definition_key = "concept.cache.definition"
+hint_key = "concept.cache.hint"
+category = &"performance"

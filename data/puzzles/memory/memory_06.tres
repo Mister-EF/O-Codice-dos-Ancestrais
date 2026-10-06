@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="MemoryBoardLevel" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://features/memory_board/memory_board_level.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "memory_06"
+title_key = "puzzle.memory_06.title"
+intro_key = "puzzle.memory_06.intro"
+grid_columns = 4
+grid_rows = 5
+concept_ids = Array[StringName]([&"docker", &"git", &"github", &"api", &"rest", &"kubernetes", &"sql", &"nosql", &"cicd", &"container"])
+pair_mode = 2
+max_moves = 23
+time_limit_seconds = 240.0
+three_star_moves = 12
+two_star_moves = 17
+one_star_moves = 23

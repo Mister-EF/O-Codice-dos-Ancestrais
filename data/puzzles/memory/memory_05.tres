@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="MemoryBoardLevel" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://features/memory_board/memory_board_level.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = "memory_05"
+title_key = "puzzle.memory_05.title"
+intro_key = "puzzle.memory_05.intro"
+grid_columns = 4
+grid_rows = 4
+concept_ids = Array[StringName]([&"commit", &"merge", &"cache", &"server", &"cloud", &"terminal", &"database", &"frontend"])
+pair_mode = 1
+max_moves = 16
+time_limit_seconds = 180.0
+three_star_moves = 8
+two_star_moves = 12
+one_star_moves = 16

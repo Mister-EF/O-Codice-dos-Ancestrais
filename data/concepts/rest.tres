@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ConceptData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/concept_data.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"rest"
+name_key = "concept.rest.name"
+definition_key = "concept.rest.definition"
+hint_key = "concept.rest.hint"
+category = &"networking"

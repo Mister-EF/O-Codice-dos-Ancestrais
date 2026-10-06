@@ -27,6 +27,22 @@
 | `placeholder_icon` | `Texture2D` | PNG, 128×128 | Faction-specific icon | `pirates.tres`, `scholars.tres`, `mercenaries.tres` |
 | `placeholder_banner` | `Texture2D` | PNG, 512×256 | Faction-specific banner | `pirates.tres`, `scholars.tres`, `mercenaries.tres` |
 
+## Memory Board (`features/memory_board/`)
+
+| Slot Name | Type | Expected Format | Purpose |
+|-----------|------|----------------|---------|
+| `placeholder_card_back` | `Texture2D` | PNG, square/tall card art | Shared card-back art; null uses a flat color and localized text |
+| `placeholder_card_front` | `Texture2D` | PNG, square/tall card art | Shared card-front art; null uses a flat color and localized text |
+| `ConceptData.placeholder_icon` | `Texture2D` | PNG/SVG, square | Optional concept icon used by icon-mode pairs |
+| `sfx_flip` | `AudioStream` | OGG/WAV, short | Card reveal sound |
+| `sfx_match` | `AudioStream` | OGG/WAV, short | Correct pair sound |
+| `sfx_mismatch` | `AudioStream` | OGG/WAV, short | Incorrect pair sound |
+| `sfx_win` | `AudioStream` | OGG/WAV, short | Completed-level sound |
+
+Card textures and sound streams are nullable scene exports on `MemoryBoard`; per-card
+front/back exports on `MemoryCard` can override the textures. All slots have procedural
+or silent null fallbacks.
+
 ---
 
 ## Audio Buses
@@ -40,4 +56,4 @@
 
 ---
 
-*Updated: Step 1 — Foundation*
+*Updated: Step 2 — Memory Board*

@@ -15,6 +15,11 @@ func _on_viewport_size_changed() -> void:
 
 
 func _apply_safe_area() -> void:
+	var platform: String = DisplayServer.get_name()
+	if platform != "Android" and platform != "iOS":
+		_set_margins(0, 0, 0, 0)
+		return
+
 	var safe_area: Rect2i = DisplayServer.get_display_safe_area()
 	var screen_size: Vector2i = DisplayServer.screen_get_size()
 

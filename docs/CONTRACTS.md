@@ -145,6 +145,40 @@ Central game state controller.
 | `time_seconds` | `float` | Time spent |
 | `hints_used` | `int` | Hints consumed |
 
+### MemoryBoard (`features/memory_board/memory_board.gd`)
+
+| API | Signature | Description |
+|-----|-----------|-------------|
+| `start_level` | `(level: MemoryBoardLevel) -> void` | Starts or resets the selected memory puzzle |
+| `level_finished` | `(result: PuzzleResult)` | Emitted once when a level is won or failed |
+| `exit_requested` | `()` | Emitted when the player requests return to the host/map |
+
+`MemoryBoard` does not register puzzle progress. The scene host must connect
+`level_finished` and call `GameManager.register_puzzle_result(result)`. The temporary
+debug launcher demonstrates this contract; the map/scene manager will own it in Step 5.
+Run the standalone picker with
+`godot --path . res://features/memory_board/memory_board_debug.tscn`.
+
+### ConceptData (`core/concept_data.gd`, `class_name ConceptData extends Resource`)
+
+Stores a concept id, localized name/definition/hint keys, an optional icon, and a
+category. Concept resources live in `data/concepts/`.
+
+### MemoryBoardLevel (`features/memory_board/memory_board_level.gd`)
+
+Stores the `memory_01`…`memory_06` puzzle id, localized title/intro keys, grid size,
+concept ids, pair mode, move/time limits, and move thresholds for one to three stars.
+Level resources live in `data/puzzles/memory/`. A zero move/time limit is unlimited.
+
+### MemoryBoardLogic (`features/memory_board/memory_board_logic.gd`)
+
+Pure `RefCounted` puzzle rules. `setup(level, seed, faction_bonus)` creates a
+seedable shuffled deck and applies optional `FactionData` move/time bonuses;
+`flip(index)` returns a `FlipResult`, `resolve_mismatch()` closes a mismatch, and
+`calculate_stars()` evaluates a completed attempt. It does not access autoloads or
+emit signals. Run its headless tests with
+`godot --headless -s res://tests/test_memory_board_logic.gd`.
+
 ### AssetCatalog (`core/asset_catalog.gd`, `class_name AssetCatalog extends Resource`)
 
 Central registry of all placeholder asset slots. See `docs/ASSET_SLOTS.md` for the full table.
@@ -175,7 +209,8 @@ Both `LocalizedLabel` and `LocalizedButton` expose:
 | `boot.*` | Boot/test scene | `boot.title`, `boot.language_label` |
 | `faction.<id>.name|desc|bonus` | Faction strings | `faction.pirates.name` |
 | `concept.<id>.name|definition|hint` | Tech concept strings | `concept.docker.name` |
-| `puzzle.<id>.title|intro` | Puzzle strings | `puzzle.mem_01.title` |
+| `puzzle.<id>.title|intro` | Puzzle strings | `puzzle.memory_01.title` |
+| `ui.memory.*` | Memory puzzle UI | `ui.memory.moves`, `ui.memory.hint` |
 | `rune.*` | Rune logic puzzle strings | `rune.and_gate` |
 | `territory.<id>.name|desc` | World map territory | `territory.01.name` |
 | `tooltip.*` | Tooltip/clue text | `tooltip.tap_to_interact` |
