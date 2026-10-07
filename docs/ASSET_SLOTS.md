@@ -29,6 +29,20 @@
 
 ---
 
+## Circuit Puzzle (`features/circuit_puzzle/circuit_puzzle.gd`, `circuit_tile.gd`)
+
+| Slot Name | Type | Expected Format | Purpose | Files |
+|-----------|------|----------------|---------|-------|
+| `placeholder_tile_texture` | `Texture2D` | PNG, 128×128 | Connector line/tile texture fallback | `circuit_puzzle.gd`, `circuit_tile.gd` |
+| `placeholder_source_texture` | `Texture2D` | PNG, 128×128 | Source / generator node texture | `circuit_puzzle.gd`, `circuit_tile.gd` |
+| `placeholder_target_texture` | `Texture2D` | PNG, 128×128 | Target receiver node texture | `circuit_puzzle.gd`, `circuit_tile.gd` |
+| `placeholder_blocker_texture` | `Texture2D` | PNG, 128×128 | Blocker / corrupted sector obstacle | `circuit_puzzle.gd`, `circuit_tile.gd` |
+| `sfx_rotate` | `AudioStream` | OGG/WAV, <0.2s | Tile 90-degree rotate sound effect | `circuit_puzzle.gd` |
+| `sfx_powered` | `AudioStream` | OGG/WAV, <0.4s | Target node powered energy hum | `circuit_puzzle.gd` |
+| `sfx_solved` | `AudioStream` | OGG/WAV, <1.5s | Level completed / circuit restored jingle | `circuit_puzzle.gd` |
+
+---
+
 ## Audio Buses
 
 | Bus Name | Purpose |
@@ -40,4 +54,4 @@
 
 ---
 
-*Updated: Step 1 — Foundation*
+*Updated: Step 3 — Circuit Logic Puzzle*

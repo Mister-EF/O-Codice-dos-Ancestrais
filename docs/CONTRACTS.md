@@ -167,17 +167,86 @@ Both `LocalizedLabel` and `LocalizedButton` expose:
 
 ---
 
+## Circuit Puzzle (`features/circuit_puzzle/`)
+
+### 1. CircuitTileDef (`features/circuit_puzzle/circuit_tile_def.gd`)
+
+Pure data resource representing an individual circuit tile.
+
+| Property / Method | Type | Description |
+|-------------------|------|-------------|
+| `tile_type` | `CircuitTileType` | Enum: `EMPTY`, `STRAIGHT`, `CORNER`, `T_JUNCTION`, `CROSS`, `SOURCE`, `TARGET`, `BLOCKER` |
+| `rotation_index` | `int` | Rotation steps 0..3 (0, 90, 180, 270 degrees clockwise) |
+| `locked` | `bool` | Whether tile is locked against player rotation |
+| `label_key` | `String` | Optional localization key for concept node (e.g. `concept.flow.parse`) |
+| `solution_rotation` | `int` | Rotation index for the solved state |
+| `get_base_mask` | `(type: CircuitTileType) -> int` | Static 4-bit mask (N:1, E:2, S:4, W:8) at rotation 0 |
+| `rotate_mask` | `(mask: int, steps: int) -> int` | Static circular 4-bit shift clockwise |
+
+### 2. CircuitLevel (`features/circuit_puzzle/circuit_level.gd`)
+
+Puzzle level definition resource.
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `id` | `String` | Puzzle identifier (`circuit_01` .. `circuit_08`) |
+| `title_key` | `String` | Translation key for level title |
+| `intro_key` | `String` | Translation key for educational narrative intro |
+| `grid_columns` / `grid_rows` | `int` | Dimensions of the puzzle grid |
+| `tiles` | `Array[CircuitTileDef]` | Flat array of tile definitions |
+| `required_targets` | `int` | Number of targets required to solve (0 = all targets) |
+| `par_moves` | `int` | Target move count |
+| `star_thresholds` | `Array[int]` | Move thresholds for [3 stars, 2 stars, 1 star] |
+| `time_limit_seconds` | `float` | Optional countdown limit (0.0 = untimed) |
+
+### 3. CircuitLogic (`features/circuit_puzzle/circuit_logic.gd`)
+
+Pure algorithmic state engine (extends `RefCounted`).
+
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| `load_level` | `(level: CircuitLevel) -> void` | Reset state and initialize grid from level |
+| `rotate_tile` | `(cell: Vector2i) -> bool` | Rotate tile 90° clockwise, increments `moves` if unlocked |
+| `compute_powered` | `() -> Dictionary` | BFS flood-fill returning `{Vector2i: bool}` honoring edge symmetry |
+| `is_solved` | `() -> bool` | True if powered targets >= `required_targets` |
+| `calculate_stars` | `() -> int` | Compute 0..3 stars based on moves vs thresholds |
+| `get_hint` | `() -> Vector2i` | Returns wrongly oriented cell vs solution (-1,-1 if none) |
+
+### 4. CircuitSolver (`features/circuit_puzzle/circuit_solver.gd`)
+
+Validator and level shuffler utility.
+
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| `shuffle_from_solution` | `(level: CircuitLevel, seed: int) -> void` | Scramble level from solution guaranteeing initial unsolved state |
+| `validate_authored_solution` | `(level: CircuitLevel) -> bool` | Verify that authored `solution_rotation` solves the level |
+| `find_solution` | `(level: CircuitLevel, max_nodes: int) -> bool` | Backtracking solver checking solvability |
+
+### 5. CircuitPuzzle (`features/circuit_puzzle/circuit_puzzle.gd`)
+
+Main UI controller view (extends `Control`).
+
+| Method / Signal | Signature | Description |
+|-----------------|-----------|-------------|
+| `start_level` | `(level: CircuitLevel) -> void` | Begin playing specified level |
+| `signal level_finished` | `(result: PuzzleResult)` | Emitted when all required targets are powered |
+| `signal exit_requested` | `()` | Emitted when back button is pressed |
+
+---
+
 ## Localization Key Convention
 
 | Prefix | Usage | Example |
 |--------|-------|---------|
 | `ui.*` | Generic UI chrome | `ui.play`, `ui.back`, `ui.settings` |
+| `ui.circuit.*` | Circuit puzzle chrome | `ui.circuit.moves`, `ui.circuit.hint` |
 | `boot.*` | Boot/test scene | `boot.title`, `boot.language_label` |
-| `faction.<id>.name|desc|bonus` | Faction strings | `faction.pirates.name` |
-| `concept.<id>.name|definition|hint` | Tech concept strings | `concept.docker.name` |
-| `puzzle.<id>.title|intro` | Puzzle strings | `puzzle.mem_01.title` |
+| `faction.<id>.name\|desc\|bonus` | Faction strings | `faction.pirates.name` |
+| `concept.<id>.name\|definition\|hint` | Tech concept strings | `concept.docker.name` |
+| `concept.flow.<id>.name\|definition\|hint` | Program flow concepts | `concept.flow.parse.name` |
+| `puzzle.<id>.title\|intro` | Puzzle strings | `puzzle.circuit_01.title` |
 | `rune.*` | Rune logic puzzle strings | `rune.and_gate` |
-| `territory.<id>.name|desc` | World map territory | `territory.01.name` |
+| `territory.<id>.name\|desc` | World map territory | `territory.01.name` |
 | `tooltip.*` | Tooltip/clue text | `tooltip.tap_to_interact` |
 | `settings.*` | Settings labels | `settings.music_volume` |
 | `error.*` | Error messages | `error.save_failed` |
@@ -186,3 +255,4 @@ Both `LocalizedLabel` and `LocalizedButton` expose:
 - Every key must exist in both `en.json` and `pt_BR.json`.
 - `{placeholder}` names must be identical across locales.
 - No user-visible string may be hardcoded in `.gd` or `.tscn` files.
+

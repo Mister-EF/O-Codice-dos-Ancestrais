@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://features/circuit_puzzle/circuit_tile.gd" id="1_tile"]
+
+[node name="CircuitTile" type="Control"]
+custom_minimum_size = Vector2(88, 88)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 88.0
+offset_bottom = 88.0
+pivot_offset = Vector2(44, 44)
+mouse_filter = 0
+script = ExtResource("1_tile")

@@ -1,0 +1,145 @@
+[gd_resource type="Resource" script_class="CircuitLevel" load_steps=19 format=3]
+
+[ext_resource type="Script" path="res://features/circuit_puzzle/circuit_level.gd" id="1_lvl"]
+[ext_resource type="Script" path="res://features/circuit_puzzle/circuit_tile_def.gd" id="2_def"]
+
+[sub_resource type="Resource" id="Resource_t0"]
+script = ExtResource("2_def")
+tile_type = 5
+rotation_index = 1
+locked = true
+label_key = "concept.flow.input"
+solution_rotation = 1
+
+[sub_resource type="Resource" id="Resource_t1"]
+script = ExtResource("2_def")
+tile_type = 1
+rotation_index = 0
+locked = false
+label_key = ""
+solution_rotation = 1
+
+[sub_resource type="Resource" id="Resource_t2"]
+script = ExtResource("2_def")
+tile_type = 2
+rotation_index = 1
+locked = false
+label_key = ""
+solution_rotation = 2
+
+[sub_resource type="Resource" id="Resource_t3"]
+script = ExtResource("2_def")
+tile_type = 0
+rotation_index = 0
+locked = true
+label_key = ""
+solution_rotation = 0
+
+[sub_resource type="Resource" id="Resource_t4"]
+script = ExtResource("2_def")
+tile_type = 7
+rotation_index = 0
+locked = true
+label_key = ""
+solution_rotation = 0
+
+[sub_resource type="Resource" id="Resource_t5"]
+script = ExtResource("2_def")
+tile_type = 2
+rotation_index = 2
+locked = false
+label_key = ""
+solution_rotation = 0
+
+[sub_resource type="Resource" id="Resource_t6"]
+script = ExtResource("2_def")
+tile_type = 3
+rotation_index = 0
+locked = false
+label_key = "concept.flow.loop"
+solution_rotation = 2
+
+[sub_resource type="Resource" id="Resource_t7"]
+script = ExtResource("2_def")
+tile_type = 0
+rotation_index = 0
+locked = true
+label_key = ""
+solution_rotation = 0
+
+[sub_resource type="Resource" id="Resource_t8"]
+script = ExtResource("2_def")
+tile_type = 0
+rotation_index = 0
+locked = true
+label_key = ""
+solution_rotation = 0
+
+[sub_resource type="Resource" id="Resource_t9"]
+script = ExtResource("2_def")
+tile_type = 7
+rotation_index = 0
+locked = true
+label_key = ""
+solution_rotation = 0
+
+[sub_resource type="Resource" id="Resource_t10"]
+script = ExtResource("2_def")
+tile_type = 1
+rotation_index = 1
+locked = false
+label_key = "concept.flow.parse"
+solution_rotation = 0
+
+[sub_resource type="Resource" id="Resource_t11"]
+script = ExtResource("2_def")
+tile_type = 7
+rotation_index = 0
+locked = true
+label_key = ""
+solution_rotation = 0
+
+[sub_resource type="Resource" id="Resource_t12"]
+script = ExtResource("2_def")
+tile_type = 0
+rotation_index = 0
+locked = true
+label_key = ""
+solution_rotation = 0
+
+[sub_resource type="Resource" id="Resource_t13"]
+script = ExtResource("2_def")
+tile_type = 0
+rotation_index = 0
+locked = true
+label_key = ""
+solution_rotation = 0
+
+[sub_resource type="Resource" id="Resource_t14"]
+script = ExtResource("2_def")
+tile_type = 2
+rotation_index = 3
+locked = false
+label_key = ""
+solution_rotation = 0
+
+[sub_resource type="Resource" id="Resource_t15"]
+script = ExtResource("2_def")
+tile_type = 6
+rotation_index = 3
+locked = true
+label_key = "concept.flow.output"
+solution_rotation = 3
+
+[resource]
+script = ExtResource("1_lvl")
+id = "circuit_03"
+title_key = "puzzle.circuit_03.title"
+intro_key = "puzzle.circuit_03.intro"
+grid_columns = 4
+grid_rows = 4
+tiles = [SubResource("Resource_t0"), SubResource("Resource_t1"), SubResource("Resource_t2"), SubResource("Resource_t3"), SubResource("Resource_t4"), SubResource("Resource_t5"), SubResource("Resource_t6"), SubResource("Resource_t7"), SubResource("Resource_t8"), SubResource("Resource_t9"), SubResource("Resource_t10"), SubResource("Resource_t11"), SubResource("Resource_t12"), SubResource("Resource_t13"), SubResource("Resource_t14"), SubResource("Resource_t15")]
+required_targets = 1
+par_moves = 7
+star_thresholds = [7, 11, 18]
+time_limit_seconds = 0.0

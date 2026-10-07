@@ -55,5 +55,62 @@
 	"error.corrupted_save": "Save data was corrupted and has been reset.",
 
 	"tooltip.tap_to_interact": "Tap to interact",
-	"tooltip.long_press_hint": "Long-press for details"
+	"tooltip.long_press_hint": "Long-press for details",
+
+	"puzzle.circuit_01.title": "Hello World Flow",
+	"puzzle.circuit_01.intro": "Restore the basic execution path from Input to Output.",
+	"puzzle.circuit_02.title": "Validation Gate",
+	"puzzle.circuit_02.intro": "Branch incoming data into validation checks and error handling.",
+	"puzzle.circuit_03.title": "Batch Processing Loop",
+	"puzzle.circuit_03.intro": "Re-route iterations through the loop block before sending to output.",
+	"puzzle.circuit_04.title": "Function Invocation",
+	"puzzle.circuit_04.intro": "Connect caller execution to subroutines around corrupted memory blocks.",
+	"puzzle.circuit_05.title": "Database Transaction",
+	"puzzle.circuit_05.intro": "Ensure atomic execution reaches both database and response output.",
+	"puzzle.circuit_06.title": "Error Resilience",
+	"puzzle.circuit_06.intro": "Build fail-safe execution routing across corrupted nodes.",
+	"puzzle.circuit_07.title": "Event Routing Hub",
+	"puzzle.circuit_07.intro": "Coordinate microservice events to 3 separate target receivers.",
+	"puzzle.circuit_08.title": "Ancestral Master Codex",
+	"puzzle.circuit_08.intro": "Synthesize the entire execution pipeline to restore Eldoria's lost logic.",
+
+	"concept.flow.input.name": "Input",
+	"concept.flow.input.definition": "The entry point where external data enters the execution context.",
+	"concept.flow.input.hint": "Always starts as an active power source in the program flow.",
+
+	"concept.flow.parse.name": "Parse",
+	"concept.flow.parse.definition": "Converts raw input data into structured syntax trees or internal models.",
+	"concept.flow.parse.hint": "Passes clean data forward down the execution stream.",
+
+	"concept.flow.validate.name": "Validate",
+	"concept.flow.validate.definition": "Verifies that incoming parameters satisfy contract schemas and business rules.",
+	"concept.flow.validate.hint": "Often branches execution into success and error pathways.",
+
+	"concept.flow.loop.name": "Loop",
+	"concept.flow.loop.definition": "Repeats a block of instructions while a terminating condition is evaluated.",
+	"concept.flow.loop.hint": "Cycles execution flow through multiple connected iterations.",
+
+	"concept.flow.function_call.name": "Function Call",
+	"concept.flow.function_call.definition": "Invokes reusable modular logic with scoped parameters and return addresses.",
+	"concept.flow.function_call.hint": "Transfers execution control before resuming the main thread.",
+
+	"concept.flow.output.name": "Output",
+	"concept.flow.output.definition": "Emits transformed results to the terminal, caller, or downstream client.",
+	"concept.flow.output.hint": "A required target node that must be powered to complete the program.",
+
+	"concept.flow.database.name": "Database",
+	"concept.flow.database.definition": "Persists state, records queries, and commits transactional changes to storage.",
+	"concept.flow.database.hint": "Requires an uninterrupted pipeline to commit data safely.",
+
+	"concept.flow.error_handler.name": "Error Handler",
+	"concept.flow.error_handler.definition": "Catches exceptions, rolls back transactions, and restores stable state.",
+	"concept.flow.error_handler.hint": "Safety target node designated to intercept failing execution paths.",
+
+	"ui.circuit.title": "Circuit Puzzle",
+	"ui.circuit.moves": "Moves: {moves}",
+	"ui.circuit.par": "Par: {par}",
+	"ui.circuit.moves_result": "{moves} moves (Par: {par})",
+	"ui.circuit.hint": "Hint",
+	"ui.circuit.restored": "Execution Flow Restored!",
+	"ui.circuit.locked_tap": "Tile is locked"
 }

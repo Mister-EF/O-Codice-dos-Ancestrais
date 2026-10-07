@@ -55,5 +55,62 @@
 	"error.corrupted_save": "Os dados salvos estavam corrompidos e foram redefinidos.",
 
 	"tooltip.tap_to_interact": "Toque para interagir",
-	"tooltip.long_press_hint": "Pressione e segure para mais detalhes"
+	"tooltip.long_press_hint": "Pressione e segure para mais detalhes",
+
+	"puzzle.circuit_01.title": "Fluxo Hello World",
+	"puzzle.circuit_01.intro": "Restaure o caminho de execução básico da Entrada até a Saída.",
+	"puzzle.circuit_02.title": "Portão de Validação",
+	"puzzle.circuit_02.intro": "Ramifique os dados de entrada em checagens de validação e tratamento de erros.",
+	"puzzle.circuit_03.title": "Laço de Repetição em Lote",
+	"puzzle.circuit_03.intro": "Redirecione iterações pelo bloco de repetição antes de enviar para a saída.",
+	"puzzle.circuit_04.title": "Invocação de Função",
+	"puzzle.circuit_04.intro": "Conecte a execução do chamador a sub-rotinas desviando de blocos corrompidos de memória.",
+	"puzzle.circuit_05.title": "Transação de Banco de Dados",
+	"puzzle.circuit_05.intro": "Garanta que a execução atômica alcance tanto o banco de dados quanto a resposta de saída.",
+	"puzzle.circuit_06.title": "Resiliência a Falhas",
+	"puzzle.circuit_06.intro": "Construa um roteamento de execução tolerante a falhas por nós corrompidos.",
+	"puzzle.circuit_07.title": "Distribuidor de Eventos",
+	"puzzle.circuit_07.intro": "Coordene eventos de microsserviços para 3 receptores de destino distintos.",
+	"puzzle.circuit_08.title": "Códice Mestre Ancestral",
+	"puzzle.circuit_08.intro": "Sintetize o pipeline de execução completo para restaurar a lógica perdida de Eldoria.",
+
+	"concept.flow.input.name": "Entrada",
+	"concept.flow.input.definition": "O ponto de entrada onde dados externos ingressam no contexto de execução.",
+	"concept.flow.input.hint": "Sempre inicia como fonte ativa de energia no fluxo do programa.",
+
+	"concept.flow.parse.name": "Interpretação (Parse)",
+	"concept.flow.parse.definition": "Converte dados brutos de entrada em árvores sintáticas estruturadas ou modelos internos.",
+	"concept.flow.parse.hint": "Encaminha dados limpos adiante no fluxo de execução.",
+
+	"concept.flow.validate.name": "Validação",
+	"concept.flow.validate.definition": "Verifica se parâmetros recebidos satisfazem esquemas de contrato e regras de negócio.",
+	"concept.flow.validate.hint": "Frequentemente ramifica a execução em caminhos de sucesso e de falha.",
+
+	"concept.flow.loop.name": "Laço de Repetição (Loop)",
+	"concept.flow.loop.definition": "Repete um bloco de instruções enquanto uma condição de término for avaliada.",
+	"concept.flow.loop.hint": "Circula o fluxo de execução através de múltiplas iterações conectadas.",
+
+	"concept.flow.function_call.name": "Chamada de Função",
+	"concept.flow.function_call.definition": "Invoca lógica modular reutilizável com parâmetros de escopo e endereços de retorno.",
+	"concept.flow.function_call.hint": "Transfere o controle de execução antes de retomar a linha principal.",
+
+	"concept.flow.output.name": "Saída",
+	"concept.flow.output.definition": "Emite resultados transformados para o terminal, chamador ou cliente.",
+	"concept.flow.output.hint": "Um nó de destino obrigatório que deve ser energizado para concluir o programa.",
+
+	"concept.flow.database.name": "Banco de Dados",
+	"concept.flow.database.definition": "Persiste estado, registra consultas e grava alterações transacionais no armazenamento.",
+	"concept.flow.database.hint": "Requer um pipeline ininterrupto para gravar dados com segurança.",
+
+	"concept.flow.error_handler.name": "Tratador de Erros",
+	"concept.flow.error_handler.definition": "Captura exceções, reverte transações e restaura o estado estável do sistema.",
+	"concept.flow.error_handler.hint": "Nó de destino de segurança designado para interceptar caminhos de execução com falhas.",
+
+	"ui.circuit.title": "Quebra-Cabeça de Circuitos",
+	"ui.circuit.moves": "Movimentos: {moves}",
+	"ui.circuit.par": "Par: {par}",
+	"ui.circuit.moves_result": "{moves} movimentos (Par: {par})",
+	"ui.circuit.hint": "Dica",
+	"ui.circuit.restored": "Fluxo de Execução Restaurado!",
+	"ui.circuit.locked_tap": "Peça travada"
 }

@@ -1,0 +1,89 @@
+[gd_resource type="Resource" script_class="CircuitLevel" load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://features/circuit_puzzle/circuit_level.gd" id="1_lvl"]
+[ext_resource type="Script" path="res://features/circuit_puzzle/circuit_tile_def.gd" id="2_def"]
+
+[sub_resource type="Resource" id="Resource_t0"]
+script = ExtResource("2_def")
+tile_type = 2
+rotation_index = 0
+locked = false
+label_key = ""
+solution_rotation = 1
+
+[sub_resource type="Resource" id="Resource_t1"]
+script = ExtResource("2_def")
+tile_type = 1
+rotation_index = 1
+locked = false
+label_key = ""
+solution_rotation = 0
+
+[sub_resource type="Resource" id="Resource_t2"]
+script = ExtResource("2_def")
+tile_type = 0
+rotation_index = 0
+locked = true
+label_key = ""
+solution_rotation = 0
+
+[sub_resource type="Resource" id="Resource_t3"]
+script = ExtResource("2_def")
+tile_type = 5
+rotation_index = 1
+locked = true
+label_key = "concept.flow.input"
+solution_rotation = 1
+
+[sub_resource type="Resource" id="Resource_t4"]
+script = ExtResource("2_def")
+tile_type = 3
+rotation_index = 3
+locked = false
+label_key = "concept.flow.validate"
+solution_rotation = 1
+
+[sub_resource type="Resource" id="Resource_t5"]
+script = ExtResource("2_def")
+tile_type = 6
+rotation_index = 3
+locked = true
+label_key = "concept.flow.output"
+solution_rotation = 3
+
+[sub_resource type="Resource" id="Resource_t6"]
+script = ExtResource("2_def")
+tile_type = 7
+rotation_index = 0
+locked = true
+label_key = ""
+solution_rotation = 0
+
+[sub_resource type="Resource" id="Resource_t7"]
+script = ExtResource("2_def")
+tile_type = 6
+rotation_index = 0
+locked = true
+label_key = "concept.flow.error_handler"
+solution_rotation = 0
+
+[sub_resource type="Resource" id="Resource_t8"]
+script = ExtResource("2_def")
+tile_type = 7
+rotation_index = 0
+locked = true
+label_key = ""
+solution_rotation = 0
+
+[resource]
+script = ExtResource("1_lvl")
+id = "circuit_02"
+title_key = "puzzle.circuit_02.title"
+intro_key = "puzzle.circuit_02.intro"
+grid_columns = 3
+grid_rows = 3
+tiles = [SubResource("Resource_t0"), SubResource("Resource_t1"), SubResource("Resource_t2"), SubResource("Resource_t3"), SubResource("Resource_t4"), SubResource("Resource_t5"), SubResource("Resource_t6"), SubResource("Resource_t7"), SubResource("Resource_t8")]
+required_targets = 2
+par_moves = 5
+star_thresholds = [5, 8, 14]
+time_limit_seconds = 0.0
