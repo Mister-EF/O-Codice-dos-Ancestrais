@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://features/circuit_puzzle/circuit_tile.gd" id="1"]
+
+[node name="CircuitTile" type="Button"]
+custom_minimum_size = Vector2(88, 88)
+focus_mode = 0
+script = ExtResource("1")

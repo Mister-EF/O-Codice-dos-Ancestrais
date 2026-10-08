@@ -1,0 +1,42 @@
+[gd_resource type="Resource" script_class="CircuitLevel" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://features/circuit_puzzle/circuit_level.gd" id="1"]
+[ext_resource type="Script" path="res://features/circuit_puzzle/circuit_tile_def.gd" id="2"]
+
+[sub_resource type="Resource" id="Source"]
+script = ExtResource("2")
+cell = Vector2i(0, 1)
+type = 5
+initial_rotation = 0
+label_key = "concept.flow.input"
+solution_rotation = 1
+
+[sub_resource type="Resource" id="Corner"]
+script = ExtResource("2")
+cell = Vector2i(1, 1)
+type = 2
+initial_rotation = 2
+label_key = "concept.flow.parse"
+solution_rotation = 3
+
+[sub_resource type="Resource" id="Target"]
+script = ExtResource("2")
+cell = Vector2i(1, 0)
+type = 6
+initial_rotation = 1
+label_key = "concept.flow.output"
+solution_rotation = 2
+
+[resource]
+script = ExtResource("1")
+id = "circuit_01"
+title_key = "puzzle.circuit_01.title"
+intro_key = "puzzle.circuit_01.intro"
+grid_columns = 3
+grid_rows = 3
+tiles = Array[ExtResource("2")]([SubResource("Source"), SubResource("Corner"), SubResource("Target")])
+required_targets = Array[Vector2i]([Vector2i(1, 0)])
+par_moves = 3
+three_star_moves = 3
+two_star_moves = 5
+one_star_moves = 8

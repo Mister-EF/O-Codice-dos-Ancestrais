@@ -179,6 +179,47 @@ seedable shuffled deck and applies optional `FactionData` move/time bonuses;
 emit signals. Run its headless tests with
 `godot --headless -s res://tests/test_memory_board_logic.gd`.
 
+### CircuitPuzzle (`features/circuit_puzzle/circuit_puzzle.gd`)
+
+| API | Signature | Description |
+|-----|-----------|-------------|
+| `start_level` | `(level: CircuitLevel) -> void` | Starts or resets the selected circuit puzzle |
+| `level_finished` | `(result: PuzzleResult)` | Emitted once when a level is won or the timer expires |
+| `exit_requested` | `()` | Emitted when the player requests return to the host/map |
+
+The scene host registers `level_finished` results through
+`GameManager.register_puzzle_result(result)`; the standalone level picker demonstrates
+this integration. Run it with
+`godot --path . res://features/circuit_puzzle/circuit_puzzle_debug.tscn`.
+
+### CircuitTileDef (`features/circuit_puzzle/circuit_tile_def.gd`)
+
+Stores a cell coordinate, tile type, initial rotation, lock flag, and optional
+localized concept key. `solution_rotation` is an authored solution witness used by
+hint generation and the level validator; it does not change the player's starting
+orientation.
+
+### CircuitLevel (`features/circuit_puzzle/circuit_level.gd`)
+
+Stores `circuit_01`…`circuit_08`, localized title/intro keys, grid dimensions, tile
+definitions, required target coordinates, par and star thresholds, and an optional
+time limit. Level resources live in `data/puzzles/circuit/`.
+
+### CircuitLogic (`features/circuit_puzzle/circuit_logic.gd`)
+
+Pure `RefCounted` rules with reciprocal-edge BFS, move and hint tracking, star
+calculation, seeded `shuffle_from_solution(seed)`, and `get_hint()`. Optional injected
+`FactionData.hint_discount` proportionally reduces the star-scoring penalty for hints;
+the displayed move counter remains the number of tile rotations. It does not access
+autoloads or emit signals.
+
+### CircuitLevelSolver (`features/circuit_puzzle/circuit_level_solver.gd`)
+
+Test/tool backtracking solver that tries distinct tile orientations (using the authored
+solution as its preferred first candidate) and confirms every required target is
+reachable. Run its headless coverage with
+`godot --headless -s res://tests/test_circuit_logic.gd`.
+
 ### AssetCatalog (`core/asset_catalog.gd`, `class_name AssetCatalog extends Resource`)
 
 Central registry of all placeholder asset slots. See `docs/ASSET_SLOTS.md` for the full table.

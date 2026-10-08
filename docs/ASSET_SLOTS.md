@@ -43,6 +43,21 @@ Card textures and sound streams are nullable scene exports on `MemoryBoard`; per
 front/back exports on `MemoryCard` can override the textures. All slots have procedural
 or silent null fallbacks.
 
+## Circuit Puzzle (`features/circuit_puzzle/`)
+
+| Slot Name | Type | Expected Format | Purpose |
+|-----------|------|----------------|---------|
+| `placeholder_tile_texture` | `Texture2D` | PNG/SVG, square | Generic connector tile; null draws paths procedurally |
+| `placeholder_source_texture` | `Texture2D` | PNG/SVG, square | Source tile art; null draws a source node |
+| `placeholder_target_texture` | `Texture2D` | PNG/SVG, square | Target tile art; null draws a target node |
+| `placeholder_blocker_texture` | `Texture2D` | PNG/SVG, square | Blocker art; null draws a crossed obstacle |
+| `sfx_rotate` | `AudioStream` | OGG/WAV, short | Connector rotation |
+| `sfx_powered` | `AudioStream` | OGG/WAV, short | Circuit energy propagation |
+| `sfx_solved` | `AudioStream` | OGG/WAV, short | All required targets powered |
+
+All circuit exports are nullable on `CircuitPuzzle` and `CircuitTile`; procedural
+visuals and silent playback keep missing assets safe.
+
 ---
 
 ## Audio Buses
@@ -56,4 +71,4 @@ or silent null fallbacks.
 
 ---
 
-*Updated: Step 2 — Memory Board*
+*Updated: Steps 2 and 3 — Memory Board and Circuit Puzzle*

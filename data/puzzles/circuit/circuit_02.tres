@@ -1,0 +1,50 @@
+[gd_resource type="Resource" script_class="CircuitLevel" load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://features/circuit_puzzle/circuit_level.gd" id="1"]
+[ext_resource type="Script" path="res://features/circuit_puzzle/circuit_tile_def.gd" id="2"]
+
+[sub_resource type="Resource" id="Source"]
+script = ExtResource("2")
+cell = Vector2i(0, 2)
+type = 5
+initial_rotation = 0
+label_key = "concept.flow.input"
+solution_rotation = 1
+
+[sub_resource type="Resource" id="Straight"]
+script = ExtResource("2")
+cell = Vector2i(1, 2)
+type = 1
+initial_rotation = 0
+label_key = "concept.flow.parse"
+solution_rotation = 1
+
+[sub_resource type="Resource" id="Corner"]
+script = ExtResource("2")
+cell = Vector2i(2, 2)
+type = 2
+initial_rotation = 2
+label_key = "concept.flow.validate"
+solution_rotation = 3
+
+[sub_resource type="Resource" id="Target"]
+script = ExtResource("2")
+cell = Vector2i(2, 1)
+type = 6
+initial_rotation = 1
+label_key = "concept.flow.output"
+solution_rotation = 2
+
+[resource]
+script = ExtResource("1")
+id = "circuit_02"
+title_key = "puzzle.circuit_02.title"
+intro_key = "puzzle.circuit_02.intro"
+grid_columns = 3
+grid_rows = 4
+tiles = Array[ExtResource("2")]([SubResource("Source"), SubResource("Straight"), SubResource("Corner"), SubResource("Target")])
+required_targets = Array[Vector2i]([Vector2i(2, 1)])
+par_moves = 4
+three_star_moves = 4
+two_star_moves = 6
+one_star_moves = 9
