@@ -1,217 +1,141 @@
-[gd_resource type="Resource" script_class="CircuitLevel" load_steps=28 format=3]
+[gd_resource type="Resource" script_class="CircuitLevel" format=3]
 
-[ext_resource type="Script" path="res://features/circuit_puzzle/circuit_level.gd" id="1_lvl"]
-[ext_resource type="Script" path="res://features/circuit_puzzle/circuit_tile_def.gd" id="2_def"]
+[ext_resource type="Script" path="res://features/circuit_puzzle/circuit_level.gd" id="1_yjcpk"]
+[ext_resource type="Script" path="res://features/circuit_puzzle/circuit_tile_def.gd" id="2_72yag"]
 
-[sub_resource type="Resource" id="Resource_t0"]
-script = ExtResource("2_def")
+[sub_resource type="Resource" id="Resource_nqhem"]
+script = ExtResource("2_72yag")
 tile_type = 5
 rotation_index = 1
 locked = true
 label_key = "concept.flow.input"
 solution_rotation = 1
 
-[sub_resource type="Resource" id="Resource_t1"]
-script = ExtResource("2_def")
+[sub_resource type="Resource" id="Resource_bh1km"]
+script = ExtResource("2_72yag")
 tile_type = 1
-rotation_index = 0
-locked = false
-label_key = ""
 solution_rotation = 1
 
-[sub_resource type="Resource" id="Resource_t2"]
-script = ExtResource("2_def")
+[sub_resource type="Resource" id="Resource_kxvip"]
+script = ExtResource("2_72yag")
 tile_type = 2
-rotation_index = 0
-locked = false
 label_key = "concept.flow.validate"
 solution_rotation = 2
 
-[sub_resource type="Resource" id="Resource_t3"]
-script = ExtResource("2_def")
-tile_type = 0
-rotation_index = 0
+[sub_resource type="Resource" id="Resource_m282e"]
+script = ExtResource("2_72yag")
 locked = true
-label_key = ""
-solution_rotation = 0
 
-[sub_resource type="Resource" id="Resource_t4"]
-script = ExtResource("2_def")
-tile_type = 0
-rotation_index = 0
+[sub_resource type="Resource" id="Resource_mrj1u"]
+script = ExtResource("2_72yag")
 locked = true
-label_key = ""
-solution_rotation = 0
 
-[sub_resource type="Resource" id="Resource_t5"]
-script = ExtResource("2_def")
+[sub_resource type="Resource" id="Resource_8os6u"]
+script = ExtResource("2_72yag")
 tile_type = 7
-rotation_index = 0
 locked = true
-label_key = ""
-solution_rotation = 0
 
-[sub_resource type="Resource" id="Resource_t6"]
-script = ExtResource("2_def")
-tile_type = 0
-rotation_index = 0
+[sub_resource type="Resource" id="Resource_x0f7b"]
+script = ExtResource("2_72yag")
 locked = true
-label_key = ""
-solution_rotation = 0
 
-[sub_resource type="Resource" id="Resource_t7"]
-script = ExtResource("2_def")
+[sub_resource type="Resource" id="Resource_jgqce"]
+script = ExtResource("2_72yag")
 tile_type = 3
 rotation_index = 3
-locked = false
 label_key = "concept.flow.function_call"
 solution_rotation = 1
 
-[sub_resource type="Resource" id="Resource_t8"]
-script = ExtResource("2_def")
+[sub_resource type="Resource" id="Resource_oqwgn"]
+script = ExtResource("2_72yag")
 tile_type = 1
-rotation_index = 0
-locked = false
-label_key = ""
 solution_rotation = 1
 
-[sub_resource type="Resource" id="Resource_t9"]
-script = ExtResource("2_def")
+[sub_resource type="Resource" id="Resource_jug5w"]
+script = ExtResource("2_72yag")
 tile_type = 6
 rotation_index = 3
 locked = true
 label_key = "concept.flow.database"
 solution_rotation = 3
 
-[sub_resource type="Resource" id="Resource_t10"]
-script = ExtResource("2_def")
-tile_type = 0
-rotation_index = 0
+[sub_resource type="Resource" id="Resource_xyjkv"]
+script = ExtResource("2_72yag")
 locked = true
-label_key = ""
-solution_rotation = 0
 
-[sub_resource type="Resource" id="Resource_t11"]
-script = ExtResource("2_def")
-tile_type = 0
-rotation_index = 0
+[sub_resource type="Resource" id="Resource_fs1c2"]
+script = ExtResource("2_72yag")
 locked = true
-label_key = ""
-solution_rotation = 0
 
-[sub_resource type="Resource" id="Resource_t12"]
-script = ExtResource("2_def")
+[sub_resource type="Resource" id="Resource_hofed"]
+script = ExtResource("2_72yag")
 tile_type = 1
 rotation_index = 1
-locked = false
-label_key = ""
-solution_rotation = 0
 
-[sub_resource type="Resource" id="Resource_t13"]
-script = ExtResource("2_def")
+[sub_resource type="Resource" id="Resource_kg4v8"]
+script = ExtResource("2_72yag")
 tile_type = 7
-rotation_index = 0
 locked = true
-label_key = ""
-solution_rotation = 0
 
-[sub_resource type="Resource" id="Resource_t14"]
-script = ExtResource("2_def")
-tile_type = 0
-rotation_index = 0
+[sub_resource type="Resource" id="Resource_s258r"]
+script = ExtResource("2_72yag")
 locked = true
-label_key = ""
-solution_rotation = 0
 
-[sub_resource type="Resource" id="Resource_t15"]
-script = ExtResource("2_def")
-tile_type = 0
-rotation_index = 0
+[sub_resource type="Resource" id="Resource_m2l0v"]
+script = ExtResource("2_72yag")
 locked = true
-label_key = ""
-solution_rotation = 0
 
-[sub_resource type="Resource" id="Resource_t16"]
-script = ExtResource("2_def")
+[sub_resource type="Resource" id="Resource_m2grb"]
+script = ExtResource("2_72yag")
 tile_type = 7
-rotation_index = 0
 locked = true
-label_key = ""
-solution_rotation = 0
 
-[sub_resource type="Resource" id="Resource_t17"]
-script = ExtResource("2_def")
+[sub_resource type="Resource" id="Resource_vn6aa"]
+script = ExtResource("2_72yag")
 tile_type = 2
 rotation_index = 3
-locked = false
-label_key = ""
 solution_rotation = 1
 
-[sub_resource type="Resource" id="Resource_t18"]
-script = ExtResource("2_def")
+[sub_resource type="Resource" id="Resource_jjrra"]
+script = ExtResource("2_72yag")
 tile_type = 1
-rotation_index = 0
-locked = false
-label_key = ""
 solution_rotation = 1
 
-[sub_resource type="Resource" id="Resource_t19"]
-script = ExtResource("2_def")
+[sub_resource type="Resource" id="Resource_gc5p0"]
+script = ExtResource("2_72yag")
 tile_type = 2
-rotation_index = 0
-locked = false
-label_key = ""
 solution_rotation = 2
 
-[sub_resource type="Resource" id="Resource_t20"]
-script = ExtResource("2_def")
-tile_type = 0
-rotation_index = 0
+[sub_resource type="Resource" id="Resource_35at0"]
+script = ExtResource("2_72yag")
 locked = true
-label_key = ""
-solution_rotation = 0
 
-[sub_resource type="Resource" id="Resource_t21"]
-script = ExtResource("2_def")
-tile_type = 0
-rotation_index = 0
+[sub_resource type="Resource" id="Resource_8vi0b"]
+script = ExtResource("2_72yag")
 locked = true
-label_key = ""
-solution_rotation = 0
 
-[sub_resource type="Resource" id="Resource_t22"]
-script = ExtResource("2_def")
-tile_type = 0
-rotation_index = 0
+[sub_resource type="Resource" id="Resource_xdpde"]
+script = ExtResource("2_72yag")
 locked = true
-label_key = ""
-solution_rotation = 0
 
-[sub_resource type="Resource" id="Resource_t23"]
-script = ExtResource("2_def")
+[sub_resource type="Resource" id="Resource_3pcu8"]
+script = ExtResource("2_72yag")
 tile_type = 7
-rotation_index = 0
 locked = true
-label_key = ""
-solution_rotation = 0
 
-[sub_resource type="Resource" id="Resource_t24"]
-script = ExtResource("2_def")
+[sub_resource type="Resource" id="Resource_iwu2h"]
+script = ExtResource("2_72yag")
 tile_type = 6
-rotation_index = 0
 locked = true
 label_key = "concept.flow.output"
-solution_rotation = 0
 
 [resource]
-script = ExtResource("1_lvl")
+script = ExtResource("1_yjcpk")
 id = "circuit_05"
 title_key = "puzzle.circuit_05.title"
 intro_key = "puzzle.circuit_05.intro"
 grid_columns = 5
 grid_rows = 5
-tiles = [SubResource("Resource_t0"), SubResource("Resource_t1"), SubResource("Resource_t2"), SubResource("Resource_t3"), SubResource("Resource_t4"), SubResource("Resource_t5"), SubResource("Resource_t6"), SubResource("Resource_t7"), SubResource("Resource_t8"), SubResource("Resource_t9"), SubResource("Resource_t10"), SubResource("Resource_t11"), SubResource("Resource_t12"), SubResource("Resource_t13"), SubResource("Resource_t14"), SubResource("Resource_t15"), SubResource("Resource_t16"), SubResource("Resource_t17"), SubResource("Resource_t18"), SubResource("Resource_t19"), SubResource("Resource_t20"), SubResource("Resource_t21"), SubResource("Resource_t22"), SubResource("Resource_t23"), SubResource("Resource_t24")]
+tiles = Array[ExtResource("2_72yag")]([SubResource("Resource_nqhem"), SubResource("Resource_bh1km"), SubResource("Resource_kxvip"), SubResource("Resource_m282e"), SubResource("Resource_mrj1u"), SubResource("Resource_8os6u"), SubResource("Resource_x0f7b"), SubResource("Resource_jgqce"), SubResource("Resource_oqwgn"), SubResource("Resource_jug5w"), SubResource("Resource_xyjkv"), SubResource("Resource_fs1c2"), SubResource("Resource_hofed"), SubResource("Resource_kg4v8"), SubResource("Resource_s258r"), SubResource("Resource_m2l0v"), SubResource("Resource_m2grb"), SubResource("Resource_vn6aa"), SubResource("Resource_jjrra"), SubResource("Resource_gc5p0"), SubResource("Resource_35at0"), SubResource("Resource_8vi0b"), SubResource("Resource_xdpde"), SubResource("Resource_3pcu8"), SubResource("Resource_iwu2h")])
 required_targets = 2
-par_moves = 10
-star_thresholds = [10, 16, 25]
-time_limit_seconds = 0.0
+star_thresholds = Array[int]([10, 16, 25])

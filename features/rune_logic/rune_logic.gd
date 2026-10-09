@@ -17,10 +17,10 @@ var moves: int = 0
 ## Number of hints requested.
 var hints_used: int = 0
 
-var _gate_types: Dictionary[StringName, RuneGateType.Type] = {}
+var _gate_types: Dictionary[StringName, int] = {}
 var _input_values: Dictionary[StringName, bool] = {}
-var _remaining_tray: Array[RuneGateType.Type] = []
-var _solution_types: Dictionary[StringName, RuneGateType.Type] = {}
+var _remaining_tray: Array[int] = []
+var _solution_types: Dictionary[StringName, int] = {}
 var _solution_inputs: Dictionary[StringName, bool] = {}
 var _was_solved: bool = false
 
@@ -60,7 +60,7 @@ func evaluate() -> Dictionary[StringName, bool]:
 	var values: Dictionary[StringName, bool] = {}
 	for node_id: StringName in order:
 		var node_data: RuneNodeData = _find_node(node_id)
-		var gate_type: RuneGateType.Type = _gate_types[node_id]
+		var gate_type: int = _gate_types[node_id]
 		if not _evaluate_node(node_data, gate_type, values):
 			if last_error != "empty_slot":
 				return {}
@@ -91,7 +91,7 @@ func toggle_input(node_id: StringName) -> bool:
 
 
 ## Places a gate from the tray into a compatible empty slot.
-func place_gate(slot_id: StringName, gate_type: RuneGateType.Type) -> bool:
+func place_gate(slot_id: StringName, gate_type: int) -> bool:
 	var slot: RuneNodeData = _find_node(slot_id)
 	if slot == null or slot.locked or _gate_types[slot_id] != RuneGateType.Type.EMPTY_SLOT:
 		return false
@@ -109,7 +109,7 @@ func remove_gate(slot_id: StringName) -> bool:
 	var slot: RuneNodeData = _find_node(slot_id)
 	if slot == null or slot.locked:
 		return false
-	var gate_type: RuneGateType.Type = _gate_types[slot_id]
+	var gate_type: int = _gate_types[slot_id]
 	if gate_type == RuneGateType.Type.EMPTY_SLOT or gate_type == RuneGateType.Type.INPUT or gate_type == RuneGateType.Type.OUTPUT:
 		return false
 	_remaining_tray.append(gate_type)
@@ -132,10 +132,10 @@ func get_hint() -> Dictionary:
 	for node_data: RuneNodeData in level.nodes:
 		if _gate_types[node_data.id] != RuneGateType.Type.EMPTY_SLOT or _remaining_tray.is_empty():
 			continue
-		for gate_type: RuneGateType.Type in _remaining_tray:
+		for gate_type: int in _remaining_tray:
 			if not _gate_arity_matches(node_data, gate_type):
 				continue
-			var old_type: RuneGateType.Type = _gate_types[node_data.id]
+			var old_type: int = _gate_types[node_data.id]
 			_gate_types[node_data.id] = gate_type
 			var solves: bool = is_solved()
 			_gate_types[node_data.id] = old_type
@@ -183,12 +183,12 @@ func brute_force_solve() -> bool:
 
 
 ## Returns a copy of the available gate tray.
-func get_remaining_tray() -> Array[RuneGateType.Type]:
+func get_remaining_tray() -> Array[int]:
 	return _remaining_tray.duplicate()
 
 
 ## Returns the current type of a node.
-func get_gate_type(node_id: StringName) -> RuneGateType.Type:
+func get_gate_type(node_id: StringName) -> int:
 	return _gate_types.get(node_id, RuneGateType.Type.EMPTY_SLOT)
 
 
@@ -200,130 +200,114 @@ func get_input_value(node_id: StringName) -> bool:
 func _register_move() -> void:
 	moves += 1
 	state_changed.emit()
-	var solved_now: bool = is_solved()
-	if solved_now and not _was_solved:
-		_was_solved = true
-		solved.emit()
-	elif not solved_now:
-		_was_solved = false
+	if is_solved():
+		if not _was_solved:
+			_was_solved = true
+			solved.emit()
 
 
-func _visit(node_id: StringName, states: Dictionary[StringName, int], order: Array[StringName]) -> bool:
-	var state: int = states.get(node_id, 0)
+func _visit(node_id: StringName, visit_state: Dictionary[StringName, int], order: Array[StringName]) -> bool:
+	var state: int = visit_state.get(node_id, 0)
 	if state == 1:
 		return false
 	if state == 2:
 		return true
-	states[node_id] = 1
+	visit_state[node_id] = 1
 	var node_data: RuneNodeData = _find_node(node_id)
-	if node_data == null:
-		return false
-	for input_id: StringName in node_data.input_ids:
-		if not _visit(input_id, states, order):
-			return false
-	states[node_id] = 2
+	if node_data != null:
+		for input_id: StringName in node_data.input_ids:
+			if not _visit(input_id, visit_state, order):
+				return false
+	visit_state[node_id] = 2
 	order.append(node_id)
 	return true
 
 
-func _evaluate_node(node_data: RuneNodeData, gate_type: RuneGateType.Type, values: Dictionary[StringName, bool]) -> bool:
+func _evaluate_node(node_data: RuneNodeData, gate_type: int, values: Dictionary[StringName, bool]) -> bool:
 	if gate_type == RuneGateType.Type.INPUT:
-		values[node_data.id] = _input_values.get(node_data.id, node_data.initial_value)
+		values[node_data.id] = _input_values.get(node_data.id, false)
 		return true
 	if gate_type == RuneGateType.Type.EMPTY_SLOT:
 		last_error = "empty_slot"
 		return false
-	if node_data.input_ids.is_empty():
-		last_error = "missing_inputs"
-		return false
-	var first_value: bool = values.get(node_data.input_ids[0], false)
 	match gate_type:
 		RuneGateType.Type.OUTPUT:
-			values[node_data.id] = first_value
+			values[node_data.id] = values.get(node_data.input_ids[0], false) if not node_data.input_ids.is_empty() else false
 		RuneGateType.Type.NOT:
-			if node_data.input_ids.size() != 1:
-				last_error = "invalid_not_arity"
-				return false
-			values[node_data.id] = not first_value
+			var source_val: bool = values.get(node_data.input_ids[0], false) if not node_data.input_ids.is_empty() else false
+			values[node_data.id] = not source_val
 		RuneGateType.Type.AND:
-			var result: bool = true
+			var and_val: bool = true
 			for input_id: StringName in node_data.input_ids:
-				result = result and values.get(input_id, false)
-			values[node_data.id] = result
+				and_val = and_val and values.get(input_id, false)
+			values[node_data.id] = and_val
 		RuneGateType.Type.OR:
-			var result: bool = false
+			var or_val: bool = false
 			for input_id: StringName in node_data.input_ids:
-				result = result or values.get(input_id, false)
-			values[node_data.id] = result
-		_:
-		last_error = "invalid_gate"
-		return false
+				or_val = or_val or values.get(input_id, false)
+			values[node_data.id] = or_val
 	return true
 
 
-func _search_tray(index: int, tray: Array[RuneGateType.Type], candidate_types: Dictionary[StringName, RuneGateType.Type], candidate_inputs: Dictionary[StringName, bool]) -> bool:
+func _search_tray(index: int, tray: Array[int], candidate_types: Dictionary[StringName, int], candidate_inputs: Dictionary[StringName, bool]) -> bool:
 	if index >= level.nodes.size():
-		var result: Dictionary[StringName, bool] = _evaluate_candidate(candidate_types, candidate_inputs)
-		if result.is_empty():
-			return false
+		var values: Dictionary[StringName, bool] = _evaluate_candidate(candidate_types, candidate_inputs)
 		var output_node: RuneNodeData = _find_output()
-		var solved_now: bool = output_node != null and result.get(output_node.id, false) == level.target_value
-		if solved_now:
+		if output_node != null and values.get(output_node.id, false) == level.target_value:
 			_solution_types = candidate_types.duplicate()
 			_solution_inputs = candidate_inputs.duplicate()
-		return solved_now
+			return true
+		return false
+
 	var node_data: RuneNodeData = level.nodes[index]
 	if _gate_types[node_data.id] != RuneGateType.Type.EMPTY_SLOT:
 		return _search_tray(index + 1, tray, candidate_types, candidate_inputs)
+
 	for tray_index: int in range(tray.size()):
-		var gate_type: RuneGateType.Type = tray[tray_index]
+		var gate_type: int = tray[tray_index]
 		if not _gate_arity_matches(node_data, gate_type):
 			continue
-		candidate_types[node_data.id] = gate_type
-		var remaining: Array[RuneGateType.Type] = tray.duplicate()
+		var remaining: Array[int] = tray.duplicate()
 		remaining.remove_at(tray_index)
+		candidate_types[node_data.id] = gate_type
 		if _search_tray(index + 1, remaining, candidate_types, candidate_inputs):
 			return true
 		candidate_types[node_data.id] = RuneGateType.Type.EMPTY_SLOT
 	return false
 
 
-func _evaluate_candidate(candidate_types: Dictionary[StringName, RuneGateType.Type], candidate_inputs: Dictionary[StringName, bool]) -> Dictionary[StringName, bool]:
-	var order: Array[StringName] = []
-	var states: Dictionary[StringName, int] = {}
-	for node_data: RuneNodeData in level.nodes:
-		if not _visit(node_data.id, states, order):
-			return {}
+func _evaluate_candidate(candidate_types: Dictionary[StringName, int], candidate_inputs: Dictionary[StringName, bool]) -> Dictionary[StringName, bool]:
 	var values: Dictionary[StringName, bool] = {}
+	var order: Array[StringName] = []
+	var visit_state: Dictionary[StringName, int] = {}
+	for node_data: RuneNodeData in level.nodes:
+		if not _visit(node_data.id, visit_state, order):
+			return {}
 	for node_id: StringName in order:
 		var node_data: RuneNodeData = _find_node(node_id)
-		var gate_type: RuneGateType.Type = candidate_types[node_id]
+		var gate_type: int = candidate_types[node_id]
 		if gate_type == RuneGateType.Type.INPUT:
 			values[node_id] = candidate_inputs.get(node_id, false)
 		elif gate_type == RuneGateType.Type.EMPTY_SLOT:
-			return {}
+			values[node_id] = false
 		elif gate_type == RuneGateType.Type.OUTPUT:
-			if node_data.input_ids.is_empty():
-				return {}
-			values[node_id] = values.get(node_data.input_ids[0], false)
+			values[node_id] = values.get(node_data.input_ids[0], false) if not node_data.input_ids.is_empty() else false
 		elif gate_type == RuneGateType.Type.NOT:
-			if node_data.input_ids.size() != 1:
-				return {}
-			values[node_id] = not values.get(node_data.input_ids[0], false)
+			values[node_id] = not (values.get(node_data.input_ids[0], false) if not node_data.input_ids.is_empty() else false)
 		elif gate_type == RuneGateType.Type.AND:
-			var and_value: bool = true
+			var and_val: bool = true
 			for input_id: StringName in node_data.input_ids:
-				and_value = and_value and values.get(input_id, false)
-			values[node_id] = and_value
+				and_val = and_val and values.get(input_id, false)
+			values[node_id] = and_val
 		elif gate_type == RuneGateType.Type.OR:
-			var or_value: bool = false
+			var or_val: bool = false
 			for input_id: StringName in node_data.input_ids:
-				or_value = or_value or values.get(input_id, false)
-			values[node_id] = or_value
+				or_val = or_val or values.get(input_id, false)
+			values[node_id] = or_val
 	return values
 
 
-func _gate_arity_matches(slot: RuneNodeData, gate_type: RuneGateType.Type) -> bool:
+func _gate_arity_matches(slot: RuneNodeData, gate_type: int) -> bool:
 	if gate_type == RuneGateType.Type.NOT:
 		return slot.input_ids.size() == 1
 	return (gate_type == RuneGateType.Type.AND or gate_type == RuneGateType.Type.OR) and slot.input_ids.size() >= 2

@@ -6,8 +6,8 @@ extends Resource
 ## Stable node identifier within a level.
 @export var id: StringName = &""
 
-## Gate type represented by this node.
-@export var gate_type: RuneGateType.Type = RuneGateType.Type.INPUT
+## Gate type represented by this node (RuneGateType.Type enum).
+@export var gate_type: int = 0
 
 ## IDs of nodes connected to this node's inputs.
 @export var input_ids: Array[StringName] = []

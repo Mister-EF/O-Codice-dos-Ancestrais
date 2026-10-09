@@ -35,8 +35,9 @@ var _tray_label: Label
 var _hint_button: Button
 var _restart_button: Button
 var _back_button: Button
-var _selected_gate: RuneGateType.Type = RuneGateType.Type.EMPTY_SLOT
+var _selected_gate: int = RuneGateType.Type.EMPTY_SLOT
 var _clue_index: int = 0
+
 var _hints_used: int = 0
 var _hint_discount: int = 0
 var _started_at_msec: int = 0
@@ -56,13 +57,32 @@ var _result_layer: Control
 func _ready() -> void:
 	super._ready()
 	if asset_catalog != null:
-		sfx_solved = asset_catalog.sfx_rune_solved
-		sfx_error = asset_catalog.sfx_rune_error
+		if "sfx_rune_solved" in asset_catalog:
+			sfx_solved = asset_catalog.get("sfx_rune_solved")
+		if "sfx_rune_error" in asset_catalog:
+			sfx_error = asset_catalog.get("sfx_rune_error")
+
 	_build_ui()
 	EventBus.language_changed.connect(_on_language_changed)
 	var first_level: Resource = ResourceLoader.load("res://data/puzzles/runes/runes_01.tres")
 	if first_level is RuneLevel:
 		start_level(first_level as RuneLevel)
+
+
+## Called by SceneManager when launched from the world map.
+func setup_scene(params: Dictionary) -> void:
+	var path: String = params.get("level_path", "") as String
+	if not path.is_empty():
+		var lvl: Resource = ResourceLoader.load(path)
+		if lvl is RuneLevel:
+			start_level(lvl as RuneLevel)
+		else:
+			push_error("RunePuzzle: Failed to load level from path: " + path)
+	level_finished.connect(func(_r: PuzzleResult) -> void:
+		GameManager.evaluate_unlocks()
+		SceneManager.change_scene("res://ui/world_map/world_map.tscn"))
+	exit_requested.connect(func() -> void:
+		SceneManager.go_back())
 
 
 ## Starts or restarts a level without changing the public puzzle integration contract.
@@ -261,8 +281,9 @@ func _rebuild_tray() -> void:
 		child.queue_free()
 	if _level.mode != RuneLevel.Mode.PLACE_GATES:
 		return
-	var available: Array[RuneGateType.Type] = _logic.get_remaining_tray()
-	for gate_type: RuneGateType.Type in _level.tray:
+	var available: Array[int] = _logic.get_remaining_tray()
+	for gate_type: int in _level.tray:
+
 		var tray_button: Button = Button.new()
 		tray_button.custom_minimum_size = Vector2(112.0, 88.0)
 		tray_button.text = Localization.translate(_gate_name_key(gate_type))
@@ -280,7 +301,7 @@ func _update_node_view(node_id: StringName) -> void:
 	if not _node_views.has(node_id):
 		return
 	var node_data: RuneNodeData = _find_node(node_id)
-	var node_type: RuneGateType.Type = _logic.get_gate_type(node_id)
+	var node_type: int = _logic.get_gate_type(node_id)
 	var values: Dictionary[StringName, bool] = _logic.evaluate()
 	var value: bool = values.get(node_id, false)
 	var can_interact: bool = false
@@ -313,7 +334,7 @@ func _on_node_activated(node_id: StringName) -> void:
 	if _finished:
 		return
 	var changed: bool = false
-	var node_type: RuneGateType.Type = _logic.get_gate_type(node_id)
+	var node_type: int = _logic.get_gate_type(node_id)
 	if _level.mode == RuneLevel.Mode.SET_INPUTS and node_type == RuneGateType.Type.INPUT:
 		changed = _logic.toggle_input(node_id)
 	elif _level.mode == RuneLevel.Mode.PLACE_GATES:
@@ -332,7 +353,7 @@ func _on_node_activated(node_id: StringName) -> void:
 
 
 func _on_node_info_requested(node_id: StringName) -> void:
-	var node_type: RuneGateType.Type = _logic.get_gate_type(node_id)
+	var node_type: int = _logic.get_gate_type(node_id)
 	_show_popup(_tooltip_key(node_type))
 	match node_type:
 		RuneGateType.Type.AND:
@@ -345,7 +366,8 @@ func _on_node_info_requested(node_id: StringName) -> void:
 		_popup_label.text += "\n\n" + Localization.translate(_popup_table_key)
 
 
-func _on_tray_gate_pressed(gate_type: RuneGateType.Type) -> void:
+func _on_tray_gate_pressed(gate_type: int) -> void:
+
 	_selected_gate = gate_type if _selected_gate != gate_type else RuneGateType.Type.EMPTY_SLOT
 	_rebuild_tray()
 
@@ -581,16 +603,27 @@ func _animate_button_release(button: Button) -> void:
 func _apply_asset_slots(node_view: RuneNodeView) -> void:
 	if asset_catalog == null:
 		return
-	node_view.placeholder_rune_and = asset_catalog.placeholder_rune_and
-	node_view.placeholder_rune_or = asset_catalog.placeholder_rune_or
-	node_view.placeholder_rune_not = asset_catalog.placeholder_rune_not
-	node_view.placeholder_rune_input_on = asset_catalog.placeholder_rune_input_on
-	node_view.placeholder_rune_input_off = asset_catalog.placeholder_rune_input_off
-	node_view.placeholder_rune_output = asset_catalog.placeholder_rune_output
-	node_view.sfx_toggle = asset_catalog.sfx_rune_toggle
-	node_view.sfx_place = asset_catalog.sfx_rune_place
-	node_view.sfx_solved = asset_catalog.sfx_rune_solved
-	node_view.sfx_error = asset_catalog.sfx_rune_error
+	if "placeholder_rune_and" in asset_catalog:
+		node_view.placeholder_rune_and = asset_catalog.get("placeholder_rune_and")
+	if "placeholder_rune_or" in asset_catalog:
+		node_view.placeholder_rune_or = asset_catalog.get("placeholder_rune_or")
+	if "placeholder_rune_not" in asset_catalog:
+		node_view.placeholder_rune_not = asset_catalog.get("placeholder_rune_not")
+	if "placeholder_rune_input_on" in asset_catalog:
+		node_view.placeholder_rune_input_on = asset_catalog.get("placeholder_rune_input_on")
+	if "placeholder_rune_input_off" in asset_catalog:
+		node_view.placeholder_rune_input_off = asset_catalog.get("placeholder_rune_input_off")
+	if "placeholder_rune_output" in asset_catalog:
+		node_view.placeholder_rune_output = asset_catalog.get("placeholder_rune_output")
+	if "sfx_rune_toggle" in asset_catalog:
+		node_view.sfx_toggle = asset_catalog.get("sfx_rune_toggle")
+	if "sfx_rune_place" in asset_catalog:
+		node_view.sfx_place = asset_catalog.get("sfx_rune_place")
+	if "sfx_rune_solved" in asset_catalog:
+		node_view.sfx_solved = asset_catalog.get("sfx_rune_solved")
+	if "sfx_rune_error" in asset_catalog:
+		node_view.sfx_error = asset_catalog.get("sfx_rune_error")
+
 
 
 func _find_node(node_id: StringName) -> RuneNodeData:
@@ -600,7 +633,7 @@ func _find_node(node_id: StringName) -> RuneNodeData:
 	return null
 
 
-func _tooltip_key(gate_type: RuneGateType.Type) -> String:
+func _tooltip_key(gate_type: int) -> String:
 	match gate_type:
 		RuneGateType.Type.AND:
 			return "tooltip.rune.and"
@@ -615,7 +648,8 @@ func _tooltip_key(gate_type: RuneGateType.Type) -> String:
 	return "tooltip.rune.input"
 
 
-func _gate_name_key(gate_type: RuneGateType.Type) -> String:
+func _gate_name_key(gate_type: int) -> String:
+
 	match gate_type:
 		RuneGateType.Type.AND:
 			return "rune.and.name"

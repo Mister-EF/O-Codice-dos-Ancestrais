@@ -1,0 +1,41 @@
+[gd_scene load_steps=3 format=3 uid="uid://bmemorydebug01"]
+
+[ext_resource type="Script" path="res://features/memory_board/memory_board_debug.gd" id="1_mbd"]
+[ext_resource type="PackedScene" uid="uid://bmemoryboard01" path="res://features/memory_board/memory_board.tscn" id="2_mb"]
+
+[node name="MemoryBoardDebug" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mbd")
+
+[node name="MemoryBoard" parent="." instance=ExtResource("2_mb")]
+visible = false
+layout_mode = 1
+
+[node name="UI" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 60.0
+grow_horizontal = 2
+
+[node name="HBox" type="HBoxContainer" parent="UI"]
+layout_mode = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="UI/HBox"]
+layout_mode = 2
+text = "Select Level: "
+
+[node name="OptionButton" type="OptionButton" parent="UI/HBox"]
+custom_minimum_size = Vector2(200, 40)
+layout_mode = 2
+
+[node name="StartButton" type="Button" parent="UI/HBox"]
+custom_minimum_size = Vector2(100, 40)
+layout_mode = 2
+text = "Launch"

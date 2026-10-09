@@ -68,6 +68,21 @@ func _ready() -> void:
 	_build_ui()
 
 
+## Called by SceneManager when launched from the world map.
+func setup_scene(params: Dictionary) -> void:
+	var path: String = params.get("level_path", "") as String
+	if not path.is_empty():
+		var lvl: Resource = ResourceLoader.load(path)
+		if lvl is CircuitLevel:
+			start_level(lvl as CircuitLevel)
+		else:
+			push_error("CircuitPuzzle: Failed to load level from path: " + path)
+	level_finished.connect(func(_r: PuzzleResult) -> void:
+		GameManager.evaluate_unlocks()
+		SceneManager.change_scene("res://ui/world_map/world_map.tscn"))
+	exit_requested.connect(func() -> void:
+		SceneManager.go_back())
+
 func _exit_tree() -> void:
 	if EventBus.language_changed.is_connected(_on_language_changed):
 		EventBus.language_changed.disconnect(_on_language_changed)
@@ -321,6 +336,16 @@ func _show_concept_popup(p_label_key: String) -> void:
 
 func _on_language_changed(_locale: String) -> void:
 	_update_hud()
+	if _hint_button:
+		_hint_button.text = Localization.translate("ui.circuit.hint")
+	if _concept_close_btn:
+		_concept_close_btn.text = Localization.translate("ui.ok")
+	if _win_title:
+		_win_title.text = Localization.translate("ui.circuit.win_title")
+	if _win_retry_btn:
+		_win_retry_btn.text = Localization.translate("ui.retry")
+	if _win_back_btn:
+		_win_back_btn.text = Localization.translate("ui.menu")
 
 
 # ── HUD Display ──────────────────────────────────────────────────────────────
@@ -441,7 +466,7 @@ func _build_ui() -> void:
 
 	_hint_button = Button.new()
 	_hint_button.custom_minimum_size = Vector2(240, 72)
-	_hint_button.text = "Hint"
+	_hint_button.text = Localization.translate("ui.circuit.hint")
 	_hint_button.pressed.connect(_on_hint_pressed)
 	bottom_bar.add_child(_hint_button)
 
@@ -483,7 +508,7 @@ func _build_concept_modal() -> void:
 	_concept_close_btn = Button.new()
 	_concept_close_btn.custom_minimum_size = Vector2(160, 56)
 	_concept_close_btn.size_flags_horizontal = SIZE_SHRINK_CENTER
-	_concept_close_btn.text = "OK"
+	_concept_close_btn.text = Localization.translate("ui.ok")
 	_concept_close_btn.pressed.connect(func() -> void: _concept_modal.visible = false)
 	vbox.add_child(_concept_close_btn)
 
@@ -508,7 +533,7 @@ func _build_win_panel() -> void:
 
 	_win_title = Label.new()
 	_win_title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_win_title.text = "Circuit Restored!"
+	_win_title.text = Localization.translate("ui.circuit.win_title")
 	vbox.add_child(_win_title)
 
 	_win_stars_label = Label.new()
@@ -526,12 +551,12 @@ func _build_win_panel() -> void:
 
 	_win_retry_btn = Button.new()
 	_win_retry_btn.custom_minimum_size = Vector2(130, 60)
-	_win_retry_btn.text = "Retry"
+	_win_retry_btn.text = Localization.translate("ui.retry")
 	_win_retry_btn.pressed.connect(_on_restart_pressed)
 	btns_hbox.add_child(_win_retry_btn)
 
 	_win_back_btn = Button.new()
 	_win_back_btn.custom_minimum_size = Vector2(130, 60)
-	_win_back_btn.text = "Menu"
+	_win_back_btn.text = Localization.translate("ui.menu")
 	_win_back_btn.pressed.connect(_on_back_pressed)
 	btns_hbox.add_child(_win_back_btn)

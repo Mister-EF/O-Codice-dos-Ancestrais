@@ -1,0 +1,117 @@
+[gd_scene load_steps=7 format=3 uid="uid://bmainmenu01"]
+
+[ext_resource type="Script" path="res://ui/main_menu/main_menu.gd" id="1_mm"]
+[ext_resource type="Script" path="res://core/safe_area_container.gd" id="2_safe"]
+[ext_resource type="Script" path="res://core/localized_label.gd" id="3_lbl"]
+[ext_resource type="Script" path="res://core/localized_button.gd" id="4_btn"]
+[ext_resource type="PackedScene" uid="uid://bconfirmdialog01" path="res://ui/common/confirm_dialog.tscn" id="5_conf"]
+[ext_resource type="Script" path="res://ui/common/language_toggle.gd" id="6_lang"]
+
+[node name="MainMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mm")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.08, 0.08, 0.14, 1)
+
+[node name="SafeArea" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_safe")
+
+[node name="VBox" type="VBoxContainer" parent="SafeArea"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="TopBar" type="HBoxContainer" parent="SafeArea/VBox"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+alignment = 2
+
+[node name="LanguageToggle" type="Button" parent="SafeArea/VBox/TopBar"]
+layout_mode = 2
+script = ExtResource("6_lang")
+
+[node name="TitleBox" type="VBoxContainer" parent="SafeArea/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Title" type="Label" parent="SafeArea/VBox/TitleBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+theme_override_colors/font_color = Color(0.95, 0.85, 0.5, 1)
+text = "Codex of the Ancients"
+horizontal_alignment = 1
+script = ExtResource("3_lbl")
+translation_key = "boot.title"
+
+[node name="Subtitle" type="Label" parent="SafeArea/VBox/TitleBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.7, 0.7, 0.8, 1)
+text = "Digital Chaos Restored"
+horizontal_alignment = 1
+script = ExtResource("3_lbl")
+translation_key = "ui.subtitle"
+
+[node name="Spacer" type="Control" parent="SafeArea/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MenuButtons" type="VBoxContainer" parent="SafeArea/VBox"]
+custom_minimum_size = Vector2(300, 0)
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 16
+
+[node name="BtnContinue" type="Button" parent="SafeArea/VBox/MenuButtons"]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+text = "Continue"
+script = ExtResource("4_btn")
+translation_key = "ui.continue"
+
+[node name="BtnNewGame" type="Button" parent="SafeArea/VBox/MenuButtons"]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+text = "New Game"
+script = ExtResource("4_btn")
+translation_key = "ui.new_game"
+
+[node name="BtnSettings" type="Button" parent="SafeArea/VBox/MenuButtons"]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+text = "Settings"
+script = ExtResource("4_btn")
+translation_key = "ui.settings"
+
+[node name="BtnQuit" type="Button" parent="SafeArea/VBox/MenuButtons"]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+text = "Quit"
+script = ExtResource("4_btn")
+translation_key = "ui.quit"
+
+[node name="BottomSpacer" type="Control" parent="SafeArea/VBox"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+
+[node name="ConfirmDialog" parent="." instance=ExtResource("5_conf")]
+visible = false
+layout_mode = 1

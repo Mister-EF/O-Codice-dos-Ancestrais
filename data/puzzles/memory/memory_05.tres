@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="MemoryBoardLevel" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://features/memory_board/memory_board_level.gd" id="1_mbl"]
+
+[resource]
+script = ExtResource("1_mbl")
+id = "memory_05"
+title_key = "puzzle.memory_05.title"
+intro_key = "puzzle.memory_05.intro"
+grid_columns = 4
+grid_rows = 4
+concept_ids = Array[StringName]([&"kubernetes", &"cicd", &"image", &"branch", &"commit", &"merge", &"cache", &"server"])
+pair_mode = 0
+max_moves = 0
+time_limit_seconds = 60
+star_thresholds = Array[int]([14, 20, 28])

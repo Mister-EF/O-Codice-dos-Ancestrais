@@ -27,6 +27,12 @@ extends Resource
 ## World map music track.
 @export var music_world_map: AudioStream
 
+## World map ambient background audio.
+@export var ambience_world_map: AudioStream
+
+## Sound effect played on territory unlock celebration.
+@export var sfx_territory_unlocked: AudioStream
+
 ## Generic puzzle music track (individual puzzles may override).
 @export var music_puzzle: AudioStream
 

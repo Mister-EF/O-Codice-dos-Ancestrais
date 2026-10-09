@@ -22,7 +22,7 @@ signal info_requested(node_id: StringName)
 @export var sfx_error: AudioStream
 
 var node_id: StringName = &""
-var gate_type: RuneGateType.Type = RuneGateType.Type.INPUT
+var gate_type: int = RuneGateType.Type.INPUT
 var node_value: bool = false
 var interactive: bool = true
 
@@ -55,7 +55,7 @@ func _ready() -> void:
 
 
 ## Sets the node's identity, gate, state, and tap behavior.
-func set_node_state(id: StringName, type: RuneGateType.Type, value: bool, can_interact: bool) -> void:
+func set_node_state(id: StringName, type: int, value: bool, can_interact: bool) -> void:
 	node_id = id
 	gate_type = type
 	node_value = value
@@ -170,14 +170,13 @@ func _refresh_label(_locale: String = "") -> void:
 func _play(stream: AudioStream) -> void:
 	if stream == null:
 		return
-	if _active_stream == null:
-		_active_stream = stream
 	var player: AudioStreamPlayer = AudioStreamPlayer.new()
 	player.stream = stream
 	player.bus = "SFX"
 	add_child(player)
 	player.finished.connect(player.queue_free)
 	player.play()
+
 
 
 func _size_label() -> void:

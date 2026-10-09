@@ -11,9 +11,9 @@ config_version=5
 [application]
 
 config/name="Codex of the Ancients"
+run/main_scene="res://main.tscn"
 config/features=PackedStringArray("4.7", "Mobile")
 config/icon="res://icon.svg"
-run/main_scene="res://main.tscn"
 
 [autoload]
 
@@ -21,6 +21,8 @@ EventBus="*res://autoload/event_bus.gd"
 Localization="*res://autoload/localization.gd"
 SaveSystem="*res://autoload/save_system.gd"
 GameManager="*res://autoload/game_manager.gd"
+SceneManager="*res://autoload/scene_manager.gd"
+AudioManager="*res://autoload/audio_manager.gd"
 
 [debug]
 
@@ -34,23 +36,14 @@ gdscript/warnings/unsafe_call_argument=1
 
 window/size/viewport_width=720
 window/size/viewport_height=1280
-window/size/mode=0
-window/handheld/orientation=1
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
+window/handheld/orientation=1
 
 [input_devices]
 
 pointing/emulate_touch_from_mouse=true
 
-[internationalization]
-
-locale/translations=PackedStringArray()
-
 [rendering]
 
 renderer/rendering_method="gl_compatibility"
-
-[audio]
-
-buses/default_bus_layout="res://default_bus_layout.tres"

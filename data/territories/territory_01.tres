@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="TerritoryData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/territory_data.gd" id="1_td"]
+
+[resource]
+script = ExtResource("1_td")
+id = &"territory_01"
+name_key = "territory.01.name"
+description_key = "territory.01.desc"
+map_position = Vector2(0.25, 0.8)
+puzzle_ids = Array[String](["memory_01", "memory_02", "circuit_01", "runes_01"])
+required_stars = 0
+required_territory_id = &""
+faction_affinity = 1
+recommended_mechanic = 0

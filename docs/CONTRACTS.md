@@ -234,6 +234,176 @@ Main UI controller view (extends `Control`).
 
 ---
 
+## Memory Board Puzzle (`features/memory_board/`)
+
+### 1. ConceptData (`core/concept_data.gd`, `class_name ConceptData extends Resource`)
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `id` | `StringName` | Unique concept ID (e.g. `&"docker"`) |
+| `name_key` | `String` | Translation key for concept display name |
+| `definition_key` | `String` | Translation key for concept definition |
+| `hint_key` | `String` | Translation key for long-press educational hint |
+| `placeholder_icon` | `Texture2D` | Concept icon asset slot |
+| `category` | `StringName` | Domain category (devops, backend, database, etc.) |
+
+### 2. MemoryBoardLevel (`features/memory_board/memory_board_level.gd`, `class_name MemoryBoardLevel extends Resource`)
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `id` | `String` | Puzzle level ID (`memory_01` .. `memory_06`) |
+| `title_key` | `String` | Translation key for level title |
+| `intro_key` | `String` | Translation key for narrative intro |
+| `grid_columns` / `grid_rows` | `int` | Memory board dimensions |
+| `concept_ids` | `Array[StringName]` | List of concept IDs used in grid |
+| `pair_mode` | `PairMode` | Enum: `NAME_TO_DEFINITION`, `NAME_TO_ICON`, `MIXED` |
+| `max_moves` | `int` | Maximum allowed flips (0 = unlimited) |
+| `time_limit_seconds` | `float` | Time limit in seconds (0.0 = unlimited) |
+| `star_thresholds` | `Array[int]` | Moves thresholds for [3 stars, 2 stars, 1 star] |
+
+### 3. MemoryBoardLogic (`features/memory_board/memory_board_logic.gd`)
+
+Pure state engine for Memory Board (extends `RefCounted`).
+
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| `load_level` | `(level: MemoryBoardLevel, seed: int = -1, extra_flips: int = 0)` | Build board deck with seedable shuffle |
+| `flip` | `(index: int) -> Dictionary` | Flip card at index; returns status dict |
+| `resolve_mismatch` | `() -> Array[int]` | Resets non-matching cards after delay |
+| `calculate_stars` | `() -> int` | Compute 1..3 stars vs thresholds and faction bonus |
+| `get_hint_pair` | `() -> Array[int]` | Return 2 card indices for an unmatched pair |
+
+### 4. MemoryBoard (`features/memory_board/memory_board.gd`)
+
+Main UI controller view (extends `Control`).
+
+| Method / Signal | Signature | Description |
+|-----------------|-----------|-------------|
+| `start_level` | `(level: MemoryBoardLevel) -> void` | Start playing specified memory level |
+| `signal level_finished` | `(result: PuzzleResult)` | Emitted on level completion |
+| `signal exit_requested` | `()` | Emitted on exit/back action |
+
+---
+
+## Rune Logic Puzzle (`features/rune_logic/`)
+
+### 1. RuneGateType (`features/rune_logic/rune_gate_type.gd`)
+
+Enum holder: `INPUT`, `AND`, `OR`, `NOT`, `OUTPUT`, `EMPTY_SLOT`.
+
+### 2. RuneLevel (`features/rune_logic/rune_level.gd`, `class_name RuneLevel extends Resource`)
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `id` | `String` | Level ID (`runes_01` .. `runes_10`) |
+| `title_key` | `String` | Translation key for level title |
+| `intro_key` | `String` | Translation key for narrative intro |
+| `mode` | `Mode` | Enum: `SET_INPUTS`, `PLACE_GATES`, `TRUTH_TABLE` |
+| `nodes` | `Array[RuneNodeData]` | Gate node definitions forming the expression graph |
+| `tray` | `Array[RuneGateType.Type]` | Tray of gates for `PLACE_GATES` mode |
+| `target_value` | `bool` | Target Boolean output value |
+| `par_moves` | `int` | Par move target |
+| `star_thresholds` | `three_star_moves`, `two_star_moves` | Move thresholds for star rating |
+
+### 3. RuneLogic (`features/rune_logic/rune_logic.gd`)
+
+Pure acyclic graph evaluation engine (extends `RefCounted`).
+
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| `evaluate` | `() -> Dictionary[StringName, bool]` | Evaluates topological graph values |
+| `toggle_input` | `(id: StringName) -> bool` | Toggles input state ON/OFF |
+| `place_gate` | `(slot_id: StringName, type: RuneGateType.Type) -> bool` | Places gate into empty slot |
+| `remove_gate` | `(slot_id: StringName) -> bool` | Removes gate back to tray |
+| `is_solved` | `() -> bool` | Returns true if circuit output equals target |
+| `get_hint` | `() -> Dictionary` | Returns single optimal move recommendation |
+| `brute_force_solve` | `() -> bool` | Solves puzzle state exhaustively |
+
+### 4. TruthTableLogic (`features/rune_logic/truth_table_logic.gd`)
+
+Truth table validator for `TRUTH_TABLE` mode.
+
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| `generate_rows` | `() -> Array[Dictionary]` | Generates expected vs player answer rows |
+| `set_answer` | `(row: int, answer: bool) -> bool` | Sets player answer cell |
+| `cycle_answer` | `(row: int) -> bool` | Cycles cell between blank, TRUE, FALSE |
+| `validate_answers` | `() -> bool` | Returns true if all cells match expected truth table |
+
+### 5. RunePuzzle (`features/rune_logic/rune_puzzle.gd`)
+
+Main UI controller view (extends `Control`).
+
+| Method / Signal | Signature | Description |
+|-----------------|-----------|-------------|
+| `start_level` | `(level: RuneLevel) -> void` | Begin playing specified rune level |
+| `signal level_finished` | `(result: PuzzleResult)` | Emitted when target value or truth table is matched |
+---
+
+## Step 5 — Full Game Flow & UI Navigation
+
+### 1. SceneManager (`autoload/scene_manager.gd`)
+
+Manages scene loading with transition overlay, back-stack history, and Android back button.
+
+| Method / Signal | Signature | Description |
+|-----------------|-----------|-------------|
+| `change_scene` | `(path: String, params: Dictionary = {}, push_to_history: bool = true) -> void` | Crossfade transition and change current scene |
+| `go_back` | `() -> bool` | Pop back-stack and return to previous scene (returns false if empty) |
+| `can_go_back` | `() -> bool` | Whether back-stack has history entries |
+| `get_current_scene_path` | `() -> String` | Resource path of current active scene |
+| `get_current_params` | `() -> Dictionary` | Parameters passed to current active scene |
+| `clear_history` | `() -> void` | Clears all navigation history |
+| `signal scene_changed` | `(new_scene_path: String)` | Emitted after new scene is loaded and faded in |
+
+### 2. AudioManager (`autoload/audio_manager.gd`)
+
+Bus-aware, null-safe audio player with crossfade for background music and one-shot SFX.
+
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| `play_music` | `(stream: AudioStream, fade_duration: float = 1.0) -> void` | Plays music on `Music` bus with crossfade (null-safe) |
+| `stop_music` | `(fade_duration: float = 1.0) -> void` | Fades out and stops current music |
+| `play_sfx` | `(stream: AudioStream) -> void` | Plays one-shot sound effect on `SFX` bus |
+| `get_current_music` | `() -> AudioStream` | Returns currently playing music stream or null |
+
+### 3. TerritoryData (`core/territory_data.gd`)
+
+Resource definition for unlockable world map regions.
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `id` | `StringName` | Unique identifier (e.g. `&"territory_01"`) |
+| `name_key` | `String` | Localization key for region name |
+| `description_key` | `String` | Localization key for region lore description |
+| `map_position` | `Vector2` | Normalized position (0..1) on world map |
+| `placeholder_icon` | `Texture2D` | Territory marker icon |
+| `placeholder_locked_icon` | `Texture2D` | Territory marker locked icon |
+| `puzzle_ids` | `Array[String]` | Ordered list of puzzle IDs in this territory |
+| `required_stars` | `int` | Total star threshold required to unlock |
+| `required_territory_id` | `StringName` | Prerequisite territory ID (or empty) |
+| `faction_affinity` | `GameManager.Faction` | Faction with bonus or affinity |
+| `recommended_mechanic` | `RecommendedMechanic` | Enum: `MEMORY`, `CIRCUIT`, `RUNES`, `MIXED` |
+
+### 4. Puzzle Contract Extension (`setup_scene`)
+
+All three puzzle roots (`MemoryBoard`, `CircuitPuzzle`, `RunePuzzle`) implement the standard SceneManager launch contract:
+
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| `setup_scene` | `(params: Dictionary) -> void` | Receives `level_path` and `puzzle_id`, starts level, and wires `level_finished` / `exit_requested` signals to `GameManager` and `SceneManager` |
+
+### 5. PuzzleLauncher (`ui/world_map/puzzle_launcher.gd`)
+
+Static dispatcher mapping puzzle IDs (`memory_*`, `circuit_*`, `runes_*`) to scenes.
+
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| `launch_puzzle` | `(puzzle_id: String) -> void` | Dispatches to appropriate scene with `level_path` param |
+
+---
+
+
 ## Localization Key Convention
 
 | Prefix | Usage | Example |

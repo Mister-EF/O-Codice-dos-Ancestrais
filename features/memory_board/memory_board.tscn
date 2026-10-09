@@ -1,0 +1,202 @@
+[gd_scene load_steps=5 format=3 uid="uid://bmemoryboard01"]
+
+[ext_resource type="Script" path="res://features/memory_board/memory_board.gd" id="1_mb"]
+[ext_resource type="Script" path="res://core/safe_area_container.gd" id="2_safe"]
+[ext_resource type="Script" path="res://core/localized_label.gd" id="3_lbl"]
+[ext_resource type="Script" path="res://core/localized_button.gd" id="4_btn"]
+
+[node name="MemoryBoard" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_mb")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.12, 0.14, 0.18, 1)
+
+[node name="SafeArea" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_safe")
+
+[node name="VBox" type="VBoxContainer" parent="SafeArea"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Header" type="HBoxContainer" parent="SafeArea/VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="SafeArea/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 20
+text = "Memory Puzzle"
+script = ExtResource("3_lbl")
+
+[node name="MovesLabel" type="Label" parent="SafeArea/VBox/Header"]
+layout_mode = 2
+text = "Moves: 0"
+script = ExtResource("3_lbl")
+
+[node name="TimerLabel" type="Label" parent="SafeArea/VBox/Header"]
+layout_mode = 2
+text = "Time: 0s"
+script = ExtResource("3_lbl")
+
+[node name="GridCenter" type="CenterContainer" parent="SafeArea/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="GridContainer" type="GridContainer" parent="SafeArea/VBox/GridCenter"]
+layout_mode = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 12
+columns = 4
+
+[node name="Footer" type="HBoxContainer" parent="SafeArea/VBox"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+alignment = 1
+
+[node name="BackButton" type="Button" parent="SafeArea/VBox/Footer"]
+custom_minimum_size = Vector2(120, 48)
+layout_mode = 2
+text = "Back"
+script = ExtResource("4_btn")
+translation_key = "ui.back"
+
+[node name="Control" type="Control" parent="SafeArea/VBox/Footer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HintButton" type="Button" parent="SafeArea/VBox/Footer"]
+custom_minimum_size = Vector2(120, 48)
+layout_mode = 2
+text = "Hint"
+script = ExtResource("4_btn")
+translation_key = "ui.memory.hint"
+
+[node name="PopupPanel" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -250.0
+offset_top = -150.0
+offset_right = 250.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="PopupPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="PopupLabel" type="Label" parent="PopupPanel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="CloseButton" type="Button" parent="PopupPanel/VBox"]
+custom_minimum_size = Vector2(100, 40)
+layout_mode = 2
+size_flags_horizontal = 4
+text = "OK"
+
+[node name="ResultPanel" type="Panel" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -180.0
+offset_right = 260.0
+offset_bottom = 180.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="ResultPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="ResultTitle" type="Label" parent="ResultPanel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 1
+text = "Level Complete"
+script = ExtResource("3_lbl")
+
+[node name="StarsLabel" type="Label" parent="ResultPanel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "★★★"
+horizontal_alignment = 1
+
+[node name="StatsLabel" type="Label" parent="ResultPanel/VBox"]
+layout_mode = 2
+horizontal_alignment = 1
+
+[node name="HBox" type="HBoxContainer" parent="ResultPanel/VBox"]
+layout_mode = 2
+alignment = 1
+
+[node name="BtnRetry" type="Button" parent="ResultPanel/VBox/HBox"]
+custom_minimum_size = Vector2(100, 44)
+layout_mode = 2
+text = "Retry"
+script = ExtResource("4_btn")
+translation_key = "ui.retry"
+
+[node name="BtnNext" type="Button" parent="ResultPanel/VBox/HBox"]
+custom_minimum_size = Vector2(100, 44)
+layout_mode = 2
+text = "Next"
+script = ExtResource("4_btn")
+translation_key = "ui.next"
+
+[node name="BtnBack" type="Button" parent="ResultPanel/VBox/HBox"]
+custom_minimum_size = Vector2(100, 44)
+layout_mode = 2
+text = "Back"
+script = ExtResource("4_btn")
+translation_key = "ui.back"

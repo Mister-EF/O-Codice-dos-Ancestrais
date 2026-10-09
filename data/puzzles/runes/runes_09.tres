@@ -1,0 +1,46 @@
+[gd_resource type="Resource" script_class="RuneLevel" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://features/rune_logic/rune_level.gd" id="1_rl"]
+[ext_resource type="Script" path="res://features/rune_logic/rune_node_data.gd" id="2_rnd"]
+
+[sub_resource type="Resource" id="Resource_a"]
+script = ExtResource("2_rnd")
+id = &"A"
+gate_type = 0
+input_ids = Array[StringName]([])
+locked = true
+initial_value = false
+
+[sub_resource type="Resource" id="Resource_g"]
+script = ExtResource("2_rnd")
+id = &"G"
+gate_type = 3
+input_ids = Array[StringName]([&"A"])
+locked = true
+initial_value = false
+
+[sub_resource type="Resource" id="Resource_out"]
+script = ExtResource("2_rnd")
+id = &"OUT"
+gate_type = 4
+input_ids = Array[StringName]([&"G"])
+locked = true
+initial_value = false
+
+[resource]
+script = ExtResource("1_rl")
+id = "runes_09"
+title_key = "puzzle.runes_09.title"
+intro_key = "puzzle.runes_09.intro"
+mode = 2
+nodes = Array[ExtResource("2_rnd")]([SubResource("Resource_a"), SubResource("Resource_g"), SubResource("Resource_out")])
+tray = Array[int]([])
+target_value = true
+truth_table_input_ids = Array[StringName]([&"A"])
+truth_table_outputs = Array[int]([-1, 0])
+par_moves = 1
+three_star_moves = 1
+two_star_moves = 2
+clue_1_key = "puzzle.runes_09.clue_1"
+clue_2_key = "puzzle.runes_09.clue_2"
+clue_3_key = "puzzle.runes_09.clue_3"

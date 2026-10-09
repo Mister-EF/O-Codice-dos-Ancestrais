@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="ConceptData" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://core/concept_data.gd" id="1_cd"]
+
+[resource]
+script = ExtResource("1_cd")
+id = &"sql"
+name_key = "concept.sql.name"
+definition_key = "concept.sql.definition"
+hint_key = "concept.sql.hint"
+category = &"database"

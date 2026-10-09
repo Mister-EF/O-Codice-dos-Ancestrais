@@ -16,8 +16,8 @@ enum Mode { SET_INPUTS, PLACE_GATES, TRUTH_TABLE }
 @export var mode: Mode = Mode.SET_INPUTS
 ## Nodes forming the expression graph.
 @export var nodes: Array[RuneNodeData] = []
-## Gates available to place in EMPTY_SLOT nodes.
-@export var tray: Array[RuneGateType.Type] = []
+## Gates available to place in EMPTY_SLOT nodes (RuneGateType.Type enum values).
+@export var tray: Array[int] = []
 ## Required final output value.
 @export var target_value: bool = true
 ## Input node IDs used to generate truth-table rows.

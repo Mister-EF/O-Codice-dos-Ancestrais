@@ -1,0 +1,163 @@
+[gd_scene load_steps=6 format=3 uid="uid://bsettingsmenu01"]
+
+[ext_resource type="Script" path="res://ui/settings/settings_menu.gd" id="1_set"]
+[ext_resource type="Script" path="res://core/safe_area_container.gd" id="2_safe"]
+[ext_resource type="Script" path="res://core/localized_label.gd" id="3_lbl"]
+[ext_resource type="Script" path="res://core/localized_button.gd" id="4_btn"]
+[ext_resource type="PackedScene" uid="uid://bconfirmdialog01" path="res://ui/common/confirm_dialog.tscn" id="5_conf"]
+
+[node name="SettingsMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_set")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.1, 0.12, 0.16, 1)
+
+[node name="SafeArea" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_safe")
+
+[node name="VBox" type="VBoxContainer" parent="SafeArea"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Header" type="HBoxContainer" parent="SafeArea/VBox"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+alignment = 1
+
+[node name="Title" type="Label" parent="SafeArea/VBox/Header"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Settings"
+horizontal_alignment = 1
+script = ExtResource("3_lbl")
+translation_key = "ui.settings"
+
+[node name="Content" type="VBoxContainer" parent="SafeArea/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="LanguageSection" type="VBoxContainer" parent="SafeArea/VBox/Content"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="SafeArea/VBox/Content/LanguageSection"]
+layout_mode = 2
+text = "Language"
+script = ExtResource("3_lbl")
+translation_key = "ui.language"
+
+[node name="HBox" type="HBoxContainer" parent="SafeArea/VBox/Content/LanguageSection"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="BtnEn" type="Button" parent="SafeArea/VBox/Content/LanguageSection/HBox"]
+custom_minimum_size = Vector2(160, 48)
+layout_mode = 2
+text = "English"
+
+[node name="BtnPt" type="Button" parent="SafeArea/VBox/Content/LanguageSection/HBox"]
+custom_minimum_size = Vector2(160, 48)
+layout_mode = 2
+text = "Português (Brasil)"
+
+[node name="AudioSection" type="VBoxContainer" parent="SafeArea/VBox/Content"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="MusicHBox" type="HBoxContainer" parent="SafeArea/VBox/Content/AudioSection"]
+layout_mode = 2
+
+[node name="MusicLabel" type="Label" parent="SafeArea/VBox/Content/AudioSection/MusicHBox"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+text = "Music"
+script = ExtResource("3_lbl")
+translation_key = "settings.music_volume"
+
+[node name="MusicSlider" type="HSlider" parent="SafeArea/VBox/Content/AudioSection/MusicHBox"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+value = 100.0
+
+[node name="SfxHBox" type="HBoxContainer" parent="SafeArea/VBox/Content/AudioSection"]
+layout_mode = 2
+
+[node name="SfxLabel" type="Label" parent="SafeArea/VBox/Content/AudioSection/SfxHBox"]
+custom_minimum_size = Vector2(140, 0)
+layout_mode = 2
+text = "SFX"
+script = ExtResource("3_lbl")
+translation_key = "settings.sfx_volume"
+
+[node name="SfxSlider" type="HSlider" parent="SafeArea/VBox/Content/AudioSection/SfxHBox"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+size_flags_horizontal = 3
+value = 100.0
+
+[node name="HapticsSection" type="HBoxContainer" parent="SafeArea/VBox/Content"]
+layout_mode = 2
+
+[node name="HapticsLabel" type="Label" parent="SafeArea/VBox/Content/HapticsSection"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Haptics"
+script = ExtResource("3_lbl")
+translation_key = "settings.haptics"
+
+[node name="HapticsCheck" type="CheckButton" parent="SafeArea/VBox/Content/HapticsSection"]
+layout_mode = 2
+button_pressed = true
+
+[node name="ActionsSection" type="VBoxContainer" parent="SafeArea/VBox/Content"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BtnChangeFaction" type="Button" parent="SafeArea/VBox/Content/ActionsSection"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+text = "Change Faction"
+script = ExtResource("4_btn")
+translation_key = "ui.settings.change_faction"
+
+[node name="BtnResetProgress" type="Button" parent="SafeArea/VBox/Content/ActionsSection"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+text = "Reset Progress"
+script = ExtResource("4_btn")
+translation_key = "ui.settings.reset_progress"
+
+[node name="Footer" type="HBoxContainer" parent="SafeArea/VBox"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+alignment = 1
+
+[node name="BtnBack" type="Button" parent="SafeArea/VBox/Footer"]
+custom_minimum_size = Vector2(160, 48)
+layout_mode = 2
+text = "Back"
+script = ExtResource("4_btn")
+translation_key = "ui.back"
+
+[node name="ConfirmDialog" parent="." instance=ExtResource("5_conf")]
+visible = false
+layout_mode = 1

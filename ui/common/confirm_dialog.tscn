@@ -1,0 +1,58 @@
+[gd_scene load_steps=4 format=3 uid="uid://bconfirmdialog01"]
+
+[ext_resource type="Script" path="res://ui/common/confirm_dialog.gd" id="1_cd"]
+[ext_resource type="Script" path="res://core/localized_label.gd" id="2_lbl"]
+[ext_resource type="Script" path="res://core/localized_button.gd" id="3_btn"]
+
+[node name="ConfirmDialog" type="PanelContainer"]
+custom_minimum_size = Vector2(400, 220)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -110.0
+offset_right = 200.0
+offset_bottom = 110.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_cd")
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+horizontal_alignment = 1
+script = ExtResource("2_lbl")
+
+[node name="MessageLabel" type="Label" parent="VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+script = ExtResource("2_lbl")
+
+[node name="HBox" type="HBoxContainer" parent="VBox"]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="BtnCancel" type="Button" parent="VBox/HBox"]
+custom_minimum_size = Vector2(140, 48)
+layout_mode = 2
+text = "Cancel"
+script = ExtResource("3_btn")
+translation_key = "ui.cancel"
+
+[node name="BtnConfirm" type="Button" parent="VBox/HBox"]
+custom_minimum_size = Vector2(140, 48)
+layout_mode = 2
+text = "Confirm"
+script = ExtResource("3_btn")
+translation_key = "ui.confirm"

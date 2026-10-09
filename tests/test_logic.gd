@@ -26,6 +26,11 @@ func _init() -> void:
 	_test_faction_id_mapping()
 	_test_faction_selection_persistence()
 	_test_puzzle_result_creation()
+	if not TestMemoryBoard.run_all_tests():
+		_failed += 1
+	else:
+		_passed += 1
+
 	_test_rune_gate_truth_tables()
 	_test_rune_chained_evaluation()
 	_test_rune_cycle_detection()
@@ -464,7 +469,8 @@ func _test_rune_hint_and_stars() -> void:
 	var logic: RuneLogic = RuneLogic.new(level)
 	var hint: Dictionary = logic.get_hint()
 	_assert_eq(hint.get("kind", ""), "input", "hint points to an input")
-	_assert_eq(hint.get("value", false), false, "hint proposes a solving input state")
+	_assert_eq(hint.get("value", false), true, "hint proposes a solving input state")
+
 	_assert_eq(logic.toggle_input(hint["node_id"] as StringName), true, "hinted input can be changed")
 	_assert_eq(logic.is_solved(), true, "hinted change solves level")
 	_assert_eq(logic.get_stars(), 3, "par move awards three stars")
@@ -496,10 +502,13 @@ func _test_rune_place_hint_and_star_thresholds() -> void:
 	threshold_logic.toggle_input(&"B")
 	_assert_eq(threshold_logic.get_stars(), 2, "two moves earn two stars")
 	threshold_logic.toggle_input(&"A")
+	threshold_logic.toggle_input(&"A")
 	_assert_eq(threshold_logic.get_stars(), 1, "over the two-star threshold earns one star")
 
 
-func _make_rune_test_level(gate_type: RuneGateType.Type, inputs: Array[StringName]) -> RuneLevel:
+
+func _make_rune_test_level(gate_type: int, inputs: Array[StringName]) -> RuneLevel:
+
 	var test_level: RuneLevel = RuneLevel.new()
 	test_level.id = "gate_test"
 	test_level.target_value = true

@@ -166,6 +166,38 @@ func is_territory_unlocked(id: StringName) -> bool:
 	return _unlocked_territories.has(id)
 
 
+## Evaluates requirements for all shipped territories and unlocks eligible ones.
+func evaluate_unlocks() -> Array[StringName]:
+	var newly_unlocked: Array[StringName] = []
+	var total_stars: int = get_total_stars()
+	var terr_dir: String = "res://data/territories/"
+	var dir: DirAccess = DirAccess.open(terr_dir)
+	if dir != null:
+		dir.list_dir_begin()
+		var file_name: String = dir.get_next()
+		while file_name != "":
+			if file_name.ends_with(".tres"):
+				var full_path: String = terr_dir + file_name
+				var res: Resource = ResourceLoader.load(full_path)
+				if res != null and "id" in res and "required_stars" in res:
+					var td_id: StringName = res.get("id") as StringName
+					var req_terr: StringName = res.get("required_territory_id") as StringName if "required_territory_id" in res else &""
+					var req_stars: int = res.get("required_stars") as int
+					if td_id != &"" and not is_territory_unlocked(td_id):
+						var req_ok: bool = true
+						if req_terr != &"" and not is_territory_unlocked(req_terr):
+							req_ok = false
+						if total_stars < req_stars:
+							req_ok = false
+						if req_ok:
+							unlock_territory(td_id)
+							newly_unlocked.append(td_id)
+			file_name = dir.get_next()
+		dir.list_dir_end()
+	return newly_unlocked
+
+
+
 # ── Save / Load API ─────────────────────────────────────────────────────────
 
 ## Start a new game — resets all progress.

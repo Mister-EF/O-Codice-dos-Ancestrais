@@ -1,0 +1,114 @@
+[gd_scene load_steps=5 format=3 uid="uid://bfactionselect01"]
+
+[ext_resource type="Script" path="res://ui/faction_select/faction_select.gd" id="1_fs"]
+[ext_resource type="Script" path="res://core/safe_area_container.gd" id="2_safe"]
+[ext_resource type="Script" path="res://core/localized_label.gd" id="3_lbl"]
+[ext_resource type="Script" path="res://core/localized_button.gd" id="4_btn"]
+
+[node name="FactionSelect" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_fs")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.12, 0.1, 0.18, 1)
+
+[node name="SafeArea" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("2_safe")
+
+[node name="VBox" type="VBoxContainer" parent="SafeArea"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Header" type="HBoxContainer" parent="SafeArea/VBox"]
+custom_minimum_size = Vector2(0, 60)
+layout_mode = 2
+alignment = 1
+
+[node name="Title" type="Label" parent="SafeArea/VBox/Header"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Select Faction"
+horizontal_alignment = 1
+script = ExtResource("3_lbl")
+translation_key = "ui.select_faction"
+
+[node name="CardsScroll" type="ScrollContainer" parent="SafeArea/VBox"]
+custom_minimum_size = Vector2(0, 140)
+layout_mode = 2
+vertical_scroll_mode = 0
+
+[node name="CardsContainer" type="HBoxContainer" parent="SafeArea/VBox/CardsScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="CardPirates" type="Button" parent="SafeArea/VBox/CardsScroll/CardsContainer"]
+custom_minimum_size = Vector2(160, 120)
+layout_mode = 2
+text = "🏴‍☠️ Pirates"
+
+[node name="CardScholars" type="Button" parent="SafeArea/VBox/CardsScroll/CardsContainer"]
+custom_minimum_size = Vector2(160, 120)
+layout_mode = 2
+text = "📜 Scholars"
+
+[node name="CardMercenaries" type="Button" parent="SafeArea/VBox/CardsScroll/CardsContainer"]
+custom_minimum_size = Vector2(160, 120)
+layout_mode = 2
+text = "⚔️ Mercenaries"
+
+[node name="Details" type="VBoxContainer" parent="SafeArea/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="FactionName" type="Label" parent="SafeArea/VBox/Details"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+horizontal_alignment = 1
+script = ExtResource("3_lbl")
+
+[node name="FactionDesc" type="Label" parent="SafeArea/VBox/Details"]
+layout_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+script = ExtResource("3_lbl")
+
+[node name="FactionBonus" type="Label" parent="SafeArea/VBox/Details"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.3, 0.9, 0.6, 1)
+horizontal_alignment = 1
+autowrap_mode = 2
+script = ExtResource("3_lbl")
+
+[node name="Footer" type="HBoxContainer" parent="SafeArea/VBox"]
+custom_minimum_size = Vector2(0, 70)
+layout_mode = 2
+alignment = 1
+
+[node name="BtnConfirm" type="Button" parent="SafeArea/VBox/Footer"]
+custom_minimum_size = Vector2(220, 56)
+layout_mode = 2
+text = "Pledge Allegiance"
+script = ExtResource("4_btn")
+translation_key = "ui.confirm"
