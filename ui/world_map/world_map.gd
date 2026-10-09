@@ -45,7 +45,10 @@ func _ready() -> void:
 	EventBus.territory_unlocked.connect(_on_territory_unlocked)
 	EventBus.language_changed.connect(_on_language_changed)
 
-	if asset_catalog != null and asset_catalog.music_world_map != null:
+	var current_faction: FactionData = GameManager.get_faction_data()
+	if current_faction != null and current_faction.placeholder_music != null:
+		AudioManager.play_music(current_faction.placeholder_music)
+	elif asset_catalog != null and asset_catalog.music_world_map != null:
 		AudioManager.play_music(asset_catalog.music_world_map)
 
 

@@ -23,6 +23,14 @@ extends Resource
 ## Placeholder banner texture for the faction (null until art team provides).
 @export var placeholder_banner: Texture2D
 
+## Placeholder theme music track for this faction / route (null until audio provided).
+@export var placeholder_music: AudioStream
+
+## Alias for placeholder_music for convenience.
+var theme_music: AudioStream:
+	get: return placeholder_music
+	set(val): placeholder_music = val
+
 ## Primary color used for UI accents when this faction is selected.
 @export var theme_color: Color = Color.WHITE
 

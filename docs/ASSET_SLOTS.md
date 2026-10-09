@@ -28,6 +28,7 @@
 |-----------|------|----------------|---------|-------|
 | `placeholder_icon` | `Texture2D` | PNG, 128×128 | Faction-specific icon | `pirates.tres`, `scholars.tres`, `mercenaries.tres` |
 | `placeholder_banner` | `Texture2D` | PNG, 512×256 | Faction-specific banner | `pirates.tres`, `scholars.tres`, `mercenaries.tres` |
+| `placeholder_music` | `AudioStream` | MP3/OGG, loopable | Faction / route theme music | `pirates.tres`, `scholars.tres`, `mercenaries.tres` |
 
 ---
 

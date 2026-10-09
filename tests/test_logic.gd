@@ -25,6 +25,7 @@ func _init() -> void:
 	_test_fill_defaults_missing_fields()
 	_test_faction_id_mapping()
 	_test_faction_selection_persistence()
+	_test_faction_route_music()
 	_test_puzzle_result_creation()
 	if not TestMemoryBoard.run_all_tests():
 		_failed += 1
@@ -335,6 +336,27 @@ func _test_faction_selection_persistence() -> void:
 	# Clean up
 	if FileAccess.file_exists(_test_save_path):
 		DirAccess.remove_absolute(_test_save_path)
+
+
+# ── Test: Faction Route Music ───────────────────────────────────────────────
+
+func _test_faction_route_music() -> void:
+	print("TEST: Faction route theme music")
+	var faction_paths: Dictionary = {
+		"pirates": "res://data/factions/pirates.tres",
+		"scholars": "res://data/factions/scholars.tres",
+		"mercenaries": "res://data/factions/mercenaries.tres",
+	}
+
+	for f_id: String in faction_paths.keys():
+		var path: String = faction_paths[f_id] as String
+		var res: Resource = ResourceLoader.load(path)
+		_assert_eq(res is FactionData, true, "%s resource is FactionData" % f_id)
+		if res is FactionData:
+			var fd: FactionData = res as FactionData
+			_assert_eq(fd.placeholder_music != null, true, "%s has placeholder_music set" % f_id)
+			_assert_eq(fd.placeholder_music is AudioStream, true, "%s placeholder_music is AudioStream" % f_id)
+			_assert_eq(fd.theme_music != null, true, "%s theme_music alias works" % f_id)
 
 
 # ── Test: PuzzleResult Creation ─────────────────────────────────────────────

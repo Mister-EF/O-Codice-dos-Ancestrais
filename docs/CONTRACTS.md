@@ -129,6 +129,7 @@ Central game state controller.
 | `bonus_key` | `String` | Translation key for bonus text |
 | `placeholder_icon` | `Texture2D` | Faction icon (nullable) |
 | `placeholder_banner` | `Texture2D` | Faction banner (nullable) |
+| `placeholder_music` | `AudioStream` | Route theme music (nullable) |
 | `theme_color` | `Color` | UI accent color |
 | `hint_discount` | `int` | % discount on hint cost |
 | `time_bonus_seconds` | `float` | Extra seconds on timed puzzles |

@@ -22,11 +22,18 @@ func _ready() -> void:
 	if GameManager.has_chosen_faction():
 		_selected_faction = GameManager.get_faction()
 	_update_view()
+	_play_faction_music()
 
 func _select(faction: GameManager.Faction) -> void:
 	Haptics.vibrate()
 	_selected_faction = faction
 	_update_view()
+	_play_faction_music()
+
+func _play_faction_music() -> void:
+	var fdata: FactionData = GameManager.get_faction_data_for(_selected_faction)
+	if fdata != null and fdata.placeholder_music != null:
+		AudioManager.play_music(fdata.placeholder_music)
 
 func _update_view() -> void:
 	_card_pirates.modulate = Color(1.2, 1.2, 0.8) if _selected_faction == GameManager.Faction.PIRATES else Color(0.7, 0.7, 0.7)
