@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://features/rune_logic/rune_node.gd" id="1_node"]
+
+[node name="RuneNode" type="Button"]
+custom_minimum_size = Vector2(112, 112)
+focus_mode = 0
+script = ExtResource("1_node")
