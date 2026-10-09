@@ -1,4 +1,4 @@
-## Memory puzzle scene. Puzzle progress is registered by the scene host.
+## Memory puzzle scene with fundo-jogo.png background wallpaper and styled UI elements.
 class_name MemoryBoard
 extends Control
 
@@ -85,15 +85,6 @@ func start_level(level: MemoryBoardLevel) -> void:
 	_grid.columns = level.grid_columns
 	for index: int in range(_logic.deck.size()):
 		var card: MemoryCard = CARD_SCENE.instantiate() as MemoryCard
-		if placeholder_card_back != null:
-			card.placeholder_card_back = placeholder_card_back
-		if placeholder_card_front != null:
-			card.placeholder_card_front = placeholder_card_front
-		if asset_catalog != null:
-			if card.placeholder_card_back == null:
-				card.placeholder_card_back = asset_catalog.panel_texture
-			if card.placeholder_card_front == null:
-				card.placeholder_card_front = asset_catalog.panel_texture
 		card.custom_minimum_size = _card_size()
 		card.configure(_logic.deck[index], index)
 		card.pressed.connect(_on_card_pressed.bind(card))
@@ -114,49 +105,79 @@ func _process(delta: float) -> void:
 
 
 func _build_ui() -> void:
-	var background: ColorRect = ColorRect.new()
-	background.color = Color(0.055, 0.065, 0.12)
+	# Main Background Wallpaper (fundo-jogo.png)
+	var background: TextureRect = TextureRect.new()
 	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	background.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	background.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if asset_catalog != null and asset_catalog.menu_background != null:
+		background.texture = asset_catalog.menu_background
+	else:
+		background.modulate = Color(0.055, 0.065, 0.12)
 	add_child(background)
+
+	var safe: SafeAreaContainer = SafeAreaContainer.new()
+	safe.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	add_child(safe)
+
 	var margins: MarginContainer = MarginContainer.new()
 	margins.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	margins.add_theme_constant_override("margin_left", 22)
-	margins.add_theme_constant_override("margin_right", 22)
-	margins.add_theme_constant_override("margin_top", 30)
-	margins.add_theme_constant_override("margin_bottom", 30)
-	add_child(margins)
+	margins.add_theme_constant_override("margin_left", 18)
+	margins.add_theme_constant_override("margin_right", 18)
+	margins.add_theme_constant_override("margin_top", 18)
+	margins.add_theme_constant_override("margin_bottom", 18)
+	safe.add_child(margins)
+
 	var layout: VBoxContainer = VBoxContainer.new()
-	layout.add_theme_constant_override("separation", 14)
+	layout.add_theme_constant_override("separation", 12)
 	margins.add_child(layout)
 
-	var header: HBoxContainer = HBoxContainer.new()
-	header.add_theme_constant_override("separation", 12)
-	layout.add_child(header)
+	# Header PanelContainer
+	var header_panel: GamePanel = GamePanel.new()
+	layout.add_child(header_panel)
+
+	var header_vbox: VBoxContainer = VBoxContainer.new()
+	header_vbox.add_theme_constant_override("separation", 6)
+	header_panel.add_child(header_vbox)
+
+	var header_row: HBoxContainer = HBoxContainer.new()
+	header_row.add_theme_constant_override("separation", 12)
+	header_vbox.add_child(header_row)
+
 	_title_label = LocalizedLabel.new()
 	_title_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_title_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_title_label.add_theme_font_size_override("font_size", 27)
-	_title_label.add_theme_color_override("font_color", Color(0.96, 0.84, 0.48))
-	header.add_child(_title_label)
+	_title_label.add_theme_font_size_override("font_size", 24)
+	_title_label.add_theme_color_override("font_color", Color(0.96, 0.88, 0.55))
+	header_row.add_child(_title_label)
+
 	var stats: VBoxContainer = VBoxContainer.new()
 	stats.size_flags_horizontal = Control.SIZE_SHRINK_END
-	header.add_child(stats)
+	header_row.add_child(stats)
+
 	_moves_label = LocalizedLabel.new()
 	_moves_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_moves_label.add_theme_font_size_override("font_size", 13)
 	stats.add_child(_moves_label)
+
 	_time_label = LocalizedLabel.new()
 	_time_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
+	_time_label.add_theme_font_size_override("font_size", 13)
 	stats.add_child(_time_label)
+
 	_intro_label = LocalizedLabel.new()
 	_intro_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_intro_label.custom_minimum_size = Vector2(0.0, 44.0)
-	layout.add_child(_intro_label)
+	_intro_label.add_theme_font_size_override("font_size", 13)
+	_intro_label.add_theme_color_override("font_color", Color(0.85, 0.88, 0.95))
+	header_vbox.add_child(_intro_label)
 
+	# Grid Holder
 	_grid_holder = CenterContainer.new()
 	_grid_holder.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	_grid_holder.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	layout.add_child(_grid_holder)
+
 	_grid = GridContainer.new()
 	_grid.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	_grid.size_flags_vertical = Control.SIZE_SHRINK_CENTER
@@ -164,51 +185,65 @@ func _build_ui() -> void:
 	_grid.add_theme_constant_override("v_separation", 10)
 	_grid_holder.add_child(_grid)
 
+	# Footer Action Buttons
 	var footer: HBoxContainer = HBoxContainer.new()
 	footer.add_theme_constant_override("separation", 12)
 	layout.add_child(footer)
+
 	_hint_button = LocalizedButton.new()
 	_hint_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_hint_button.custom_minimum_size = Vector2(0.0, 62.0)
+	_hint_button.custom_minimum_size = Vector2(0.0, 60.0)
 	_hint_button.pressed.connect(_on_hint_pressed)
 	footer.add_child(_hint_button)
+
 	var pause_button: LocalizedButton = LocalizedButton.new()
 	pause_button.translation_key = "ui.memory.pause_back"
 	pause_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	pause_button.custom_minimum_size = Vector2(0.0, 62.0)
+	pause_button.custom_minimum_size = Vector2(0.0, 60.0)
 	pause_button.pressed.connect(_open_pause_menu)
 	footer.add_child(pause_button)
+
 	_audio_player = AudioStreamPlayer.new()
 	_audio_player.bus = "SFX"
 	add_child(_audio_player)
+
 	_result_panel = RESULT_PANEL_SCENE.instantiate() as MemoryResultPanel
 	_result_panel.retry_requested.connect(_on_retry_requested)
 	_result_panel.next_requested.connect(_on_next_requested)
 	_result_panel.back_to_map_requested.connect(_on_back_requested)
 	add_child(_result_panel)
+
 	_build_pause_menu()
 
 
 func _build_pause_menu() -> void:
 	_pause_popup = PopupPanel.new()
-	var panel: PanelContainer = PanelContainer.new()
+	var panel: GamePanel = GamePanel.new()
 	panel.custom_minimum_size = Vector2(360.0, 240.0)
 	_pause_popup.add_child(panel)
+
 	var controls: VBoxContainer = VBoxContainer.new()
 	controls.add_theme_constant_override("separation", 14)
 	panel.add_child(controls)
+
 	var title: LocalizedLabel = LocalizedLabel.new()
 	title.translation_key = "ui.memory.paused"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_size_override("font_size", 24)
 	controls.add_child(title)
-	var resume: LocalizedButton = LocalizedButton.new()
+
+	var resume: GameButton = GameButton.new()
 	resume.translation_key = "ui.memory.resume"
+	resume.custom_minimum_size = Vector2(0.0, 60.0)
 	resume.pressed.connect(func() -> void: _pause_popup.hide())
 	controls.add_child(resume)
-	var back: LocalizedButton = LocalizedButton.new()
+
+	var back: GameButton = GameButton.new()
 	back.translation_key = "ui.memory.back_to_map"
+	back.custom_minimum_size = Vector2(0.0, 60.0)
 	back.pressed.connect(_on_back_requested)
 	controls.add_child(back)
+
 	_pause_popup.popup_hide.connect(func() -> void: _paused = false)
 	add_child(_pause_popup)
 
@@ -377,10 +412,10 @@ func _fit_cards() -> void:
 
 func _card_size() -> Vector2:
 	if _current_level == null:
-		return Vector2(140.0, 160.0)
-	var available_width: float = maxf(88.0, (_grid_holder.size.x - 10.0 * float(_current_level.grid_columns - 1)) / float(_current_level.grid_columns))
-	var available_height: float = maxf(88.0, (_grid_holder.size.y - 10.0 * float(_current_level.grid_rows - 1)) / float(_current_level.grid_rows))
-	return Vector2(minf(170.0, available_width), minf(190.0, available_height))
+		return Vector2(130.0, 160.0)
+	var available_width: float = maxf(90.0, (_grid_holder.size.x - 10.0 * float(_current_level.grid_columns - 1)) / float(_current_level.grid_columns))
+	var available_height: float = maxf(110.0, (_grid_holder.size.y - 10.0 * float(_current_level.grid_rows - 1)) / float(_current_level.grid_rows))
+	return Vector2(minf(150.0, available_width), minf(180.0, available_height))
 
 
 func _format_time(seconds: float) -> String:

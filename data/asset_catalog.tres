@@ -1,6 +1,24 @@
-[gd_resource type="Resource" script_class="AssetCatalog" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="AssetCatalog" load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://core/asset_catalog.gd" id="1"]
+[ext_resource type="Texture2D" path="res://images/botão.png" id="2"]
+[ext_resource type="Texture2D" path="res://images/fundo-jogo.png" id="3"]
+[ext_resource type="Texture2D" path="res://images/capa - jogo.png" id="4"]
+[ext_resource type="Texture2D" path="res://images/portas-exemplo.png" id="5"]
+[ext_resource type="Texture2D" path="res://images/moldura-carta.png" id="6"]
+[ext_resource type="Texture2D" path="res://images/verso-carta.png" id="7"]
+[ext_resource type="Texture2D" path="res://images/simbolo-docker.png" id="8"]
+[ext_resource type="Texture2D" path="res://images/simbolo-git.png" id="9"]
 
 [resource]
 script = ExtResource("1")
+button_texture = ExtResource("2")
+menu_background = ExtResource("3")
+placeholder_menu_background = ExtResource("3")
+cover_art = ExtResource("4")
+placeholder_game_logo = ExtResource("4")
+door_texture = ExtResource("5")
+card_frame = ExtResource("6")
+card_back = ExtResource("7")
+docker_icon = ExtResource("8")
+git_icon = ExtResource("9")

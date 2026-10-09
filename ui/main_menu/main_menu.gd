@@ -9,62 +9,81 @@ var _dialog: ConfirmDialog
 
 func _ready() -> void:
 	_apply_theme()
+	var catalog: AssetCatalog = load("res://data/asset_catalog.tres") as AssetCatalog
+
+	# Main background wallpaper (fundo-jogo.png)
 	var background: TextureRect = TextureRect.new()
 	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	background.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	background.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
-	var catalog: AssetCatalog = load("res://data/asset_catalog.tres") as AssetCatalog
 	if catalog != null:
-		background.texture = catalog.placeholder_menu_background if catalog.placeholder_menu_background != null else catalog.menu_background
+		background.texture = catalog.menu_background if catalog.menu_background != null else catalog.placeholder_menu_background
 	if background.texture == null:
-		background.modulate = Color(0.30, 0.37, 0.58)
+		background.modulate = Color(0.12, 0.1, 0.18)
 	add_child(background)
+
 	var safe: SafeAreaContainer = SafeAreaContainer.new()
 	safe.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(safe)
+
 	var center: CenterContainer = CenterContainer.new()
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	safe.add_child(center)
+
 	var panel: GamePanel = GamePanel.new()
 	panel.custom_minimum_size = Vector2(540.0, 700.0)
 	center.add_child(panel)
+
 	var stack: VBoxContainer = VBoxContainer.new()
 	stack.add_theme_constant_override("separation", 18)
 	panel.add_child(stack)
+
+	# Main cover art / title image (capa - jogo.png)
 	var logo: TextureRect = TextureRect.new()
-	logo.custom_minimum_size = Vector2(0.0, 160.0)
+	logo.custom_minimum_size = Vector2(0.0, 180.0)
 	logo.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	logo.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	if catalog != null:
-		logo.texture = catalog.placeholder_game_logo
+		logo.texture = catalog.cover_art if catalog.cover_art != null else catalog.placeholder_game_logo
 	logo.visible = logo.texture != null
 	stack.add_child(logo)
+
 	var title: LocalizedLabel = LocalizedLabel.new()
 	title.translation_key = "ui.menu.title"
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_font_size_override("font_size", 34)
+	if logo.visible:
+		# Hide text title if graphic cover art logo is visible to avoid duplication
+		title.visible = false
 	stack.add_child(title)
+
 	var language: LanguageToggle = LanguageToggle.new()
 	stack.add_child(language)
+
 	if catalog != null and catalog.music_menu != null:
 		AudioManager.play_music(catalog.music_menu)
+
 	_continue_button = GameButton.new()
 	_continue_button.set_localized("ui.menu.continue")
 	_continue_button.pressed.connect(_on_continue)
 	stack.add_child(_continue_button)
+
 	var new_game: GameButton = GameButton.new()
 	new_game.set_localized("ui.menu.new_game")
 	new_game.pressed.connect(_on_new_game)
 	stack.add_child(new_game)
+
 	var settings: GameButton = GameButton.new()
 	settings.set_localized("ui.menu.settings")
 	settings.pressed.connect(_open_settings)
 	stack.add_child(settings)
+
 	if OS.has_feature("pc") or OS.has_feature("desktop"):
 		var quit: GameButton = GameButton.new()
 		quit.set_localized("ui.menu.quit")
 		quit.pressed.connect(func() -> void: get_tree().quit())
 		stack.add_child(quit)
+
 	_dialog = ConfirmDialog.new()
 	add_child(_dialog)
 	EventBus.progress_changed.connect(_refresh)

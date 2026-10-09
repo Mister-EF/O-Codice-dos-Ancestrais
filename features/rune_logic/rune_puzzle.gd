@@ -125,10 +125,16 @@ func start_level(level: RuneLevel) -> void:
 
 
 func _build_ui() -> void:
-	var background: ColorRect = ColorRect.new()
-	background.color = Color(0.045, 0.055, 0.10)
+	var catalog: AssetCatalog = load("res://data/asset_catalog.tres") as AssetCatalog
+	var background: TextureRect = TextureRect.new()
 	background.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	background.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	background.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_COVERED
 	background.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	if catalog != null and catalog.menu_background != null:
+		background.texture = catalog.menu_background
+	else:
+		background.modulate = Color(0.045, 0.055, 0.10)
 	add_child(background)
 	var safe_area: SafeAreaContainer = SafeAreaContainer.new()
 	safe_area.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
