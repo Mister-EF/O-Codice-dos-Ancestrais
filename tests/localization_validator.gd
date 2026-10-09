@@ -10,6 +10,7 @@ extends SceneTree
 
 var _errors: int = 0
 var _warnings: int = 0
+var _known_keys: Dictionary = {}
 
 
 func _init() -> void:
@@ -27,6 +28,7 @@ func _run_validation() -> void:
 
 	var en: Dictionary = _load_json("res://localization/en.json")
 	var pt: Dictionary = _load_json("res://localization/pt_BR.json")
+	_known_keys = en
 
 	if en.is_empty() and pt.is_empty():
 		_error("Both translation files are empty or failed to load.")
@@ -140,12 +142,21 @@ func _check_file_for_hardcoded(path: String) -> void:
 	file.close()
 
 	var lines: PackedStringArray = content.split("\n")
+	var key_regex: RegEx = RegEx.new()
+	key_regex.compile("(?:set_localized|show_key)\\s*\\(\\s*\"([^\"]+)\"|translation_key\\s*=\\s*\"([^\"]+)\"")
 	for i: int in range(lines.size()):
 		var line: String = lines[i].strip_edges()
 
 		# Skip comments.
 		if line.begins_with("#") or line.begins_with("//"):
 			continue
+
+		for match: RegExMatch in key_regex.search_all(line):
+			var key: String = match.get_string(1)
+			if key.is_empty():
+				key = match.get_string(2)
+			if not _known_keys.has(key):
+				_error("Unknown localization key '%s' at %s:%d" % [key, path, i + 1])
 
 		# Check for .text = "..." assignments in GDScript (not translation keys).
 		if ".text = \"" in line:

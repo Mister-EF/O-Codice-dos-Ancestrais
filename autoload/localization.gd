@@ -48,8 +48,8 @@ func set_language(locale: String) -> void:
 		return
 	_apply_locale(locale)
 	# Persist the choice through SaveSystem (may not be ready on first frame).
-	if Engine.has_singleton("SaveSystem") or has_node("/root/SaveSystem"):
-		SaveSystem.request_save()
+	if has_node("/root/SaveSystem"):
+		SaveSystem.set_value("locale", locale)
 	EventBus.language_changed.emit(locale)
 
 

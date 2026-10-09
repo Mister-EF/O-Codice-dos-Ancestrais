@@ -30,6 +30,30 @@ extends Resource
 ## Generic puzzle music track (individual puzzles may override).
 @export var music_puzzle: AudioStream
 
+## Ambient track used on the world map.
+@export var music_map_ambience: AudioStream
+
+## Optional transition overlay artwork.
+@export var placeholder_transition_texture: Texture2D
+
+## Optional main-menu title/logo artwork.
+@export var placeholder_game_logo: Texture2D
+
+## Optional main-menu backdrop.
+@export var placeholder_menu_background: Texture2D
+
+## Optional world-map backdrop.
+@export var placeholder_map_background: Texture2D
+
+## Optional territory marker art.
+@export var placeholder_territory_icon: Texture2D
+
+## Optional locked-territory marker art.
+@export var placeholder_territory_locked_icon: Texture2D
+
+## Optional visual burst shown when a territory unlocks.
+@export var placeholder_unlock_vfx: Texture2D
+
 
 # ── Faction Shared ───────────────────────────────────────────────────────────
 

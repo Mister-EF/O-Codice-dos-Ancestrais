@@ -1,4 +1,4 @@
-## Standalone level picker and host for circuit puzzle testing.
+## Development-only standalone level picker and host for circuit puzzle testing.
 class_name CircuitPuzzleDebug
 extends Control
 

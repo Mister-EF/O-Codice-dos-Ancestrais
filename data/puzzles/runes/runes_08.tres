@@ -1,0 +1,44 @@
+[gd_resource type="Resource" script_class="RuneLevel" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://features/rune_logic/rune_level.gd" id="1"]
+[ext_resource type="Script" path="res://features/rune_logic/rune_node_def.gd" id="2"]
+
+[sub_resource type="Resource" id="InputA"]
+script = ExtResource("2")
+id = &"a"
+gate_type = 0
+layout_position = Vector2(0.20, 0.5)
+label_key = "rune.input_a.name"
+
+[sub_resource type="Resource" id="NotGate"]
+script = ExtResource("2")
+id = &"not"
+gate_type = 3
+input_node_ids = Array[StringName]([&"a"])
+layout_position = Vector2(0.55, 0.5)
+
+[sub_resource type="Resource" id="Output"]
+script = ExtResource("2")
+id = &"output"
+gate_type = 4
+input_node_ids = Array[StringName]([&"not"])
+layout_position = Vector2(0.84, 0.5)
+
+[resource]
+script = ExtResource("1")
+id = "runes_08"
+title_key = "puzzle.runes_08.title"
+intro_key = "puzzle.runes_08.intro"
+mode = 2
+nodes = Array[ExtResource("2")]([SubResource("InputA"), SubResource("NotGate"), SubResource("Output")])
+target_value = true
+output_node_id = &"output"
+truth_table_input_ids = Array[StringName]([&"a"])
+truth_table_missing_rows = Array[int]([1])
+par_moves = 2
+three_star_moves = 2
+two_star_moves = 3
+one_star_moves = 4
+clue_1_key = "puzzle.runes_08.clue_1"
+clue_2_key = "puzzle.runes_08.clue_2"
+clue_3_key = "puzzle.runes_08.clue_3"

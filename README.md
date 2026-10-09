@@ -38,9 +38,10 @@ Para diversificar o gameplay além do tradicional jogo da memória e estimular d
 
 ## 🚀 Próximos Passos (Roadmap)
 - [x] Definição oficial da stack tecnológica (Godot Engine).
-- [ ] Prototipagem do tabuleiro de associação de cartas (*Memory Stack*).
-- [ ] Implementação do sistema de escolha de facções.
-- [ ] Desenvolvimento dos mini-puzzles complementares.
+- [x] Prototipagem do tabuleiro de associação de cartas (*Memory Stack*).
+- [x] Implementação do sistema de escolha de facções.
+- [x] Desenvolvimento dos mini-puzzles de memória, circuitos e lógica rúnica.
+- [x] Integração do fluxo de cenas, configurações e mapa de Eldoria.
 
 ---
 
@@ -57,3 +58,57 @@ Desenvolvido como projeto pelo Senai Félix Guisard para a matéria de DevOps:
 - *Carlos Eduardo*
 - *Ana Carolina*
 - *Luiz Gustavo*
+
+## Executar e validar
+
+Abra o projeto no Godot 4.7 e execute `main.tscn` (F6/F5). O fluxo de início leva ao
+menu; novos jogos solicitam facção, e jogos salvos podem ser continuados. Os seletores
+individuais de fases para desenvolvimento estão em `debug/`; no jogo, as fases são
+acessadas pelos territórios do mapa de Eldoria.
+
+Validações headless disponíveis:
+
+```text
+godot --headless -s res://tests/localization_validator.gd
+godot --headless -s res://tests/test_memory_board_logic.gd
+godot --headless -s res://tests/test_circuit_logic.gd
+godot --headless -s res://tests/test_rune_logic.gd
+godot --headless -s res://tests/smoke_test.gd
+```
+
+## Estrutura do projeto
+
+- `autoload/`: localização, salvamento, estado do jogo, áudio e transições de cena.
+- `core/`: recursos compartilhados e componentes de base.
+- `data/`: facções, conceitos, fases, territórios e catálogo de assets.
+- `features/`: tabuleiro da memória, circuitos e lógica rúnica.
+- `ui/`: controles reutilizáveis, menus, configurações, mapa e launcher de puzzles.
+- `debug/`: seletores de fases independentes, somente para desenvolvimento.
+- `localization/`: traduções `en.json` e `pt_BR.json`.
+- `docs/`: contratos públicos e lista de assets.
+- `tests/`: testes de lógica, localização e referências dos recursos/cenas.
+
+## Adicionar conteúdo
+
+### Idioma
+
+1. Crie `localization/xx.json` contendo as mesmas chaves e placeholders das traduções existentes.
+2. Registre `xx` em `Localization.SUPPORTED_LOCALES` e inclua seu nome nativo.
+3. Execute o validador de localização acima e revise os textos em todas as telas.
+
+### Conceito, puzzle ou território
+
+- Para um conceito, crie um `ConceptData` em `data/concepts/`, adicione nome, definição
+  e dica em ambos os idiomas e referencie o id numa fase de memória.
+- Para um puzzle, crie o recurso de fase na pasta do mecanismo correspondente,
+  traduza título/introdução/dicas e associe-o a uma entrada de território.
+- Para um território, crie `TerritoryData` em `data/territories/`, use id único,
+  posição normalizada, nomes/descrições traduzidos e requisitos de desbloqueio válidos.
+  Execute `tests/smoke_test.gd` depois de atualizar as referências.
+
+## Entrega de arte e áudio
+
+Os slots, tamanhos recomendados, formatos e fallbacks estão em `docs/ASSET_SLOTS.md`.
+Os assets podem ser ligados pelo `data/asset_catalog.tres`, recursos de facção/território
+ou exports das cenas de puzzle. Preserve os fallbacks procedurais e silenciosos até a
+validação de cada substituição em tela touch, áreas seguras e proporção portrait.

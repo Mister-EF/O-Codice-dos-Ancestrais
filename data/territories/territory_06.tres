@@ -1,0 +1,34 @@
+[gd_resource type="Resource" script_class="TerritoryData" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://core/territory_data.gd" id="1"]
+[ext_resource type="Script" path="res://core/territory_puzzle_entry.gd" id="2"]
+
+[sub_resource type="Resource" id="Memory06"]
+script = ExtResource("2")
+puzzle_id = "memory_06"
+puzzle_type = 0
+level_resource_path = "res://data/puzzles/memory/memory_06.tres"
+
+[sub_resource type="Resource" id="Circuit07"]
+script = ExtResource("2")
+puzzle_id = "circuit_07"
+puzzle_type = 1
+level_resource_path = "res://data/puzzles/circuit/circuit_07.tres"
+
+[sub_resource type="Resource" id="Circuit08"]
+script = ExtResource("2")
+puzzle_id = "circuit_08"
+puzzle_type = 1
+level_resource_path = "res://data/puzzles/circuit/circuit_08.tres"
+
+[resource]
+script = ExtResource("1")
+id = &"territory_06"
+name_key = "territory.06.name"
+description_key = "territory.06.desc"
+map_position = Vector2(0.72, 0.14)
+puzzle_ids = Array[ExtResource("2")]([SubResource("Memory06"), SubResource("Circuit07"), SubResource("Circuit08")])
+previous_territory_ids = Array[StringName]([&"territory_05"])
+minimum_total_stars = 28
+faction_affinity = 0
+recommended_mechanic = 3

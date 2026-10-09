@@ -1,0 +1,39 @@
+[gd_resource type="Resource" script_class="TerritoryData" load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://core/territory_data.gd" id="1"]
+[ext_resource type="Script" path="res://core/territory_puzzle_entry.gd" id="2"]
+
+[sub_resource type="Resource" id="Memory01"]
+script = ExtResource("2")
+puzzle_id = "memory_01"
+puzzle_type = 0
+level_resource_path = "res://data/puzzles/memory/memory_01.tres"
+
+[sub_resource type="Resource" id="Memory02"]
+script = ExtResource("2")
+puzzle_id = "memory_02"
+puzzle_type = 0
+level_resource_path = "res://data/puzzles/memory/memory_02.tres"
+
+[sub_resource type="Resource" id="Circuit01"]
+script = ExtResource("2")
+puzzle_id = "circuit_01"
+puzzle_type = 1
+level_resource_path = "res://data/puzzles/circuit/circuit_01.tres"
+
+[sub_resource type="Resource" id="Rune01"]
+script = ExtResource("2")
+puzzle_id = "runes_01"
+puzzle_type = 2
+level_resource_path = "res://data/puzzles/runes/runes_01.tres"
+
+[resource]
+script = ExtResource("1")
+id = &"territory_01"
+name_key = "territory.01.name"
+description_key = "territory.01.desc"
+map_position = Vector2(0.18, 0.82)
+puzzle_ids = Array[ExtResource("2")]([SubResource("Memory01"), SubResource("Memory02"), SubResource("Circuit01"), SubResource("Rune01")])
+minimum_total_stars = 0
+faction_affinity = 1
+recommended_mechanic = 3

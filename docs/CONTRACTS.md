@@ -59,7 +59,7 @@ Local JSON persistence with atomic writes, corruption recovery, and debounced au
   "version": 1,
   "locale": "en",
   "faction": "pirates",
-  "puzzles": { "<id>": { "stars": 3, "best_moves": 12, "best_time": 45.2 } },
+  "puzzles": { "<id>": { "completed": true, "stars": 3, "best_moves": 12, "best_time": 45.2 } },
   "unlocked_territories": ["territory_01"],
   "settings": { "music_volume": 1.0, "sfx_volume": 1.0, "haptics_enabled": true }
 }
@@ -96,6 +96,9 @@ Central game state controller.
 |--------|-----------|-------------|
 | `unlock_territory` | `(id: StringName) -> void` | Unlock territory, emit events |
 | `is_territory_unlocked` | `(id: StringName) -> bool` | Check if territory is unlocked |
+| `get_territories` / `get_territory` | `() -> Array[TerritoryData]` / `(id: StringName) -> TerritoryData` | Access authored territories |
+| `get_territory_completed_puzzle_count` | `(territory: TerritoryData) -> int` | Count completed puzzle entries |
+| `evaluate_unlocks` | `() -> void` | Unlock territories after prerequisites and star threshold pass |
 
 #### Save/Load API
 
@@ -114,6 +117,33 @@ Central game state controller.
 | `get_music_volume` / `set_music_volume` | `() -> float` / `(volume: float) -> void` | Music volume (0.0–1.0) |
 | `get_sfx_volume` / `set_sfx_volume` | `() -> float` / `(volume: float) -> void` | SFX volume (0.0–1.0) |
 | `is_haptics_enabled` / `set_haptics_enabled` | `() -> bool` / `(enabled: bool) -> void` | Haptic feedback toggle |
+
+Progress loaded from disk ignores puzzle and territory ids absent from authored data.
+`is_puzzle_completed` uses the stored completion flag and remains compatible with
+older saves that only recorded positive stars.
+
+### AudioManager (`autoload/audio_manager.gd`)
+
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| `play_map_ambience` | `() -> void` | Play map ambience, falling back to the legacy world-map track |
+| `play_music` | `(stream: AudioStream, fade_seconds: float = 0.7) -> void` | Null-safe Music-bus crossfade |
+| `stop_music` | `(fade_seconds: float = 0.5) -> void` | Fade out active music |
+
+### SceneManager (`autoload/scene_manager.gd`)
+
+| Method | Signature | Description |
+|--------|-----------|-------------|
+| `change_scene` | `(path: String, params: Dictionary = {}) -> void` | Threaded scene load, fade, and back-stack push |
+| `replace_scene` | `(path: String, params: Dictionary = {}) -> void` | Threaded transition without back-stack push |
+| `go_back` | `() -> void` | Run the top modal back handler or return to the prior scene |
+| `push_back_handler` / `pop_back_handler` | `(handler: Callable) -> void` | Register/remove modal back handlers |
+| `clear_history` | `() -> void` | Clear scene navigation history |
+
+`current_params` holds a deep copy of the most recent transition parameters. Android
+back-button notifications and the `ui_cancel` action call `go_back`. A full-screen
+`ColorRect` fade is the null-safe transition; `placeholder_transition_texture` is
+optional.
 
 ---
 
@@ -154,10 +184,10 @@ Central game state controller.
 | `exit_requested` | `()` | Emitted when the player requests return to the host/map |
 
 `MemoryBoard` does not register puzzle progress. The scene host must connect
-`level_finished` and call `GameManager.register_puzzle_result(result)`. The temporary
-debug launcher demonstrates this contract; the map/scene manager will own it in Step 5.
+`level_finished` and call `GameManager.register_puzzle_result(result)`. The world-map `PuzzleLauncher` owns this
+integration for shipped gameplay.
 Run the standalone picker with
-`godot --path . res://features/memory_board/memory_board_debug.tscn`.
+`godot --path . res://debug/memory_board_debug.tscn`.
 
 ### ConceptData (`core/concept_data.gd`, `class_name ConceptData extends Resource`)
 
@@ -190,7 +220,7 @@ emit signals. Run its headless tests with
 The scene host registers `level_finished` results through
 `GameManager.register_puzzle_result(result)`; the standalone level picker demonstrates
 this integration. Run it with
-`godot --path . res://features/circuit_puzzle/circuit_puzzle_debug.tscn`.
+`godot --path . res://debug/circuit_puzzle_debug.tscn`.
 
 ### CircuitTileDef (`features/circuit_puzzle/circuit_tile_def.gd`)
 
@@ -219,6 +249,80 @@ Test/tool backtracking solver that tries distinct tile orientations (using the a
 solution as its preferred first candidate) and confirms every required target is
 reachable. Run its headless coverage with
 `godot --headless -s res://tests/test_circuit_logic.gd`.
+
+### RunePuzzle (`features/rune_logic/rune_puzzle.gd`)
+
+| API | Signature | Description |
+|-----|-----------|-------------|
+| `start_level` | `(level: RuneLevel) -> void` | Starts or resets a rune logic puzzle |
+| `level_finished` | `(result: PuzzleResult)` | Emitted once after a puzzle is solved |
+| `exit_requested` | `()` | Emitted when the player requests return to the host/map |
+
+The debug launcher acts as the scene host and registers emitted results through
+`GameManager.register_puzzle_result(result)`. Run it with
+`godot --path . res://debug/rune_debug.tscn`.
+
+### RuneNodeDef (`features/rune_logic/rune_node_def.gd`)
+
+Stores a unique node id, gate type (`INPUT`, `AND`, `OR`, `NOT`, `OUTPUT`, or
+`EMPTY_SLOT`), input node ids, lock and initial input state, and an optional localized
+display key and normalized layout position.
+
+### RuneLevel (`features/rune_logic/rune_level.gd`)
+
+Stores the `runes_01`…`runes_10` puzzle id, localized title, intro, and three clue keys,
+mode (`SET_INPUTS`, `PLACE_GATES`, `TRUTH_TABLE`, or the combined `MIXED` mode), graph,
+gate tray, target output, truth-table input ids and blank row indexes, and move/star
+thresholds. Level resources live in `data/puzzles/runes/`.
+
+### RuneLogic (`features/rune_logic/rune_logic.gd`)
+
+Pure `RefCounted` acyclic graph evaluator. `evaluate()` returns all node values, detects
+missing connections and cycles via topological ordering, and supports input toggles,
+gate placement/removal, solver-backed hints, faction-discounted clue scoring, and
+stars. It has no Node/autoload dependencies.
+
+### TruthTableLogic (`features/rune_logic/truth_table_logic.gd`)
+
+Pure truth-table generator that evaluates the authored expression for every Boolean
+input combination and validates player answers for designated blank rows.
+
+### RuneLevelSolver (`features/rune_logic/rune_level_solver.gd`)
+
+Exhaustively searches the small input and gate-tray combinations used by these levels
+and returns a witness solution. Headless tests, including all ten shipped levels, run
+with `godot --headless -s res://tests/test_rune_logic.gd`.
+
+### TerritoryData and TerritoryPuzzleEntry (`core/territory_data.gd`, `core/territory_puzzle_entry.gd`)
+
+`TerritoryData` stores a unique id, localized name/description, normalized map
+position, optional locked/unlocked icons, ordered puzzle entries, previous-territory
+prerequisites, minimum total stars, faction affinity (`TerritoryData.FactionAffinity`),
+and recommended mechanic. Six
+resources in `data/territories/` distribute all 24 puzzle levels.
+
+`TerritoryPuzzleEntry` stores a unique puzzle id, type (`MEMORY`, `CIRCUIT`, or
+`RUNES`), and resource path for its typed level resource.
+
+### PuzzleLauncher (`ui/world_map/puzzle_launcher.gd`)
+
+Loads a territory entry, instantiates the corresponding existing puzzle scene,
+connects `level_finished` and `exit_requested`, then registers results via
+`GameManager.register_puzzle_result`. Existing puzzle `start_level` APIs and signals
+remain unchanged. Next-level sequences contain entries of the same puzzle mechanic
+within the current territory.
+
+### Shared UI (`ui/common/`)
+
+`GameButton` extends `LocalizedButton` with an 88-pixel minimum touch height, press
+feedback, and settings-aware haptics. `GamePanel` applies a flat style; `ConfirmDialog`
+is a localized modal confirmation; `StarRating`, `Toast`, `LanguageToggle`, and
+`LoadingOverlay` are reusable components. `GameTheme.build_theme()` uses a provided
+font when set and otherwise keeps Godot's default.
+
+The boot scene routes to the main menu. New games request faction selection before the
+map; saved games can continue. Settings are overlays so locale changes update the
+current screen and the map beneath it without reloading either scene.
 
 ### AssetCatalog (`core/asset_catalog.gd`, `class_name AssetCatalog extends Resource`)
 
@@ -252,8 +356,14 @@ Both `LocalizedLabel` and `LocalizedButton` expose:
 | `concept.<id>.name|definition|hint` | Tech concept strings | `concept.docker.name` |
 | `puzzle.<id>.title|intro` | Puzzle strings | `puzzle.memory_01.title` |
 | `ui.memory.*` | Memory puzzle UI | `ui.memory.moves`, `ui.memory.hint` |
-| `rune.*` | Rune logic puzzle strings | `rune.and_gate` |
+| `rune.*` | Rune logic puzzle rules and glossary | `rune.and.name`, `rune.precedence.name` |
+| `puzzle.runes_*.*` | Rune puzzle title, intro, and clues | `puzzle.runes_01.clue_1` |
+| `ui.runes.*` | Rune puzzle UI | `ui.runes.moves`, `ui.runes.hint` |
+| `tooltip.rune.*` | Rune help instructions | `tooltip.rune.long_press` |
 | `territory.<id>.name|desc` | World map territory | `territory.01.name` |
+| `ui.menu.*`, `ui.faction.*`, `ui.settings.*`, `ui.dialog.*` | Main flow and settings | `ui.menu.continue`, `ui.settings.language` |
+| `ui.map.*`, `ui.common.*` | Map, territory details, shared actions | `ui.map.unlock_stars`, `ui.common.close` |
+| `ui.language.*` | Native locale-toggle names | `ui.language.english_name` |
 | `tooltip.*` | Tooltip/clue text | `tooltip.tap_to_interact` |
 | `settings.*` | Settings labels | `settings.music_volume` |
 | `error.*` | Error messages | `error.save_failed` |

@@ -1,0 +1,40 @@
+[gd_resource type="Resource" script_class="TerritoryData" load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://core/territory_data.gd" id="1"]
+[ext_resource type="Script" path="res://core/territory_puzzle_entry.gd" id="2"]
+
+[sub_resource type="Resource" id="Rune07"]
+script = ExtResource("2")
+puzzle_id = "runes_07"
+puzzle_type = 2
+level_resource_path = "res://data/puzzles/runes/runes_07.tres"
+
+[sub_resource type="Resource" id="Rune08"]
+script = ExtResource("2")
+puzzle_id = "runes_08"
+puzzle_type = 2
+level_resource_path = "res://data/puzzles/runes/runes_08.tres"
+
+[sub_resource type="Resource" id="Rune09"]
+script = ExtResource("2")
+puzzle_id = "runes_09"
+puzzle_type = 2
+level_resource_path = "res://data/puzzles/runes/runes_09.tres"
+
+[sub_resource type="Resource" id="Rune10"]
+script = ExtResource("2")
+puzzle_id = "runes_10"
+puzzle_type = 2
+level_resource_path = "res://data/puzzles/runes/runes_10.tres"
+
+[resource]
+script = ExtResource("1")
+id = &"territory_05"
+name_key = "territory.05.name"
+description_key = "territory.05.desc"
+map_position = Vector2(0.22, 0.28)
+puzzle_ids = Array[ExtResource("2")]([SubResource("Rune07"), SubResource("Rune08"), SubResource("Rune09"), SubResource("Rune10")])
+previous_territory_ids = Array[StringName]([&"territory_04"])
+minimum_total_stars = 22
+faction_affinity = 2
+recommended_mechanic = 2

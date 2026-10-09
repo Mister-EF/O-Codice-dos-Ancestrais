@@ -1,0 +1,46 @@
+[gd_resource type="Resource" script_class="TerritoryData" load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://core/territory_data.gd" id="1"]
+[ext_resource type="Script" path="res://core/territory_puzzle_entry.gd" id="2"]
+
+[sub_resource type="Resource" id="Memory05"]
+script = ExtResource("2")
+puzzle_id = "memory_05"
+puzzle_type = 0
+level_resource_path = "res://data/puzzles/memory/memory_05.tres"
+
+[sub_resource type="Resource" id="Circuit03"]
+script = ExtResource("2")
+puzzle_id = "circuit_03"
+puzzle_type = 1
+level_resource_path = "res://data/puzzles/circuit/circuit_03.tres"
+
+[sub_resource type="Resource" id="Circuit04"]
+script = ExtResource("2")
+puzzle_id = "circuit_04"
+puzzle_type = 1
+level_resource_path = "res://data/puzzles/circuit/circuit_04.tres"
+
+[sub_resource type="Resource" id="Rune03"]
+script = ExtResource("2")
+puzzle_id = "runes_03"
+puzzle_type = 2
+level_resource_path = "res://data/puzzles/runes/runes_03.tres"
+
+[sub_resource type="Resource" id="Rune04"]
+script = ExtResource("2")
+puzzle_id = "runes_04"
+puzzle_type = 2
+level_resource_path = "res://data/puzzles/runes/runes_04.tres"
+
+[resource]
+script = ExtResource("1")
+id = &"territory_03"
+name_key = "territory.03.name"
+description_key = "territory.03.desc"
+map_position = Vector2(0.23, 0.56)
+puzzle_ids = Array[ExtResource("2")]([SubResource("Memory05"), SubResource("Circuit03"), SubResource("Circuit04"), SubResource("Rune03"), SubResource("Rune04")])
+previous_territory_ids = Array[StringName]([&"territory_02"])
+minimum_total_stars = 10
+faction_affinity = 3
+recommended_mechanic = 3

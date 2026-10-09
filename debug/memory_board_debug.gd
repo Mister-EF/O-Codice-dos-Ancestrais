@@ -1,4 +1,4 @@
-## Temporary standalone level picker; Step 5 can replace this launch flow.
+## Development-only standalone level picker.
 extends Control
 
 const BOARD_SCENE: PackedScene = preload("res://features/memory_board/memory_board.tscn")

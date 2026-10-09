@@ -1,0 +1,43 @@
+[gd_resource type="Resource" script_class="RuneLevel" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://features/rune_logic/rune_level.gd" id="1"]
+[ext_resource type="Script" path="res://features/rune_logic/rune_node_def.gd" id="2"]
+
+[sub_resource type="Resource" id="InputA"]
+script = ExtResource("2")
+id = &"a"
+gate_type = 0
+initial_value = true
+label_key = "rune.input_a.name"
+layout_position = Vector2(0.22, 0.5)
+
+[sub_resource type="Resource" id="NotGate"]
+script = ExtResource("2")
+id = &"not"
+gate_type = 3
+input_node_ids = Array[StringName]([&"a"])
+layout_position = Vector2(0.54, 0.5)
+
+[sub_resource type="Resource" id="Output"]
+script = ExtResource("2")
+id = &"output"
+gate_type = 4
+input_node_ids = Array[StringName]([&"not"])
+layout_position = Vector2(0.84, 0.5)
+
+[resource]
+script = ExtResource("1")
+id = "runes_03"
+title_key = "puzzle.runes_03.title"
+intro_key = "puzzle.runes_03.intro"
+mode = 0
+nodes = Array[ExtResource("2")]([SubResource("InputA"), SubResource("NotGate"), SubResource("Output")])
+target_value = true
+output_node_id = &"output"
+par_moves = 1
+three_star_moves = 1
+two_star_moves = 2
+one_star_moves = 3
+clue_1_key = "puzzle.runes_03.clue_1"
+clue_2_key = "puzzle.runes_03.clue_2"
+clue_3_key = "puzzle.runes_03.clue_3"

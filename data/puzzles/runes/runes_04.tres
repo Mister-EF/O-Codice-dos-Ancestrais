@@ -1,0 +1,55 @@
+[gd_resource type="Resource" script_class="RuneLevel" load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://features/rune_logic/rune_level.gd" id="1"]
+[ext_resource type="Script" path="res://features/rune_logic/rune_node_def.gd" id="2"]
+
+[sub_resource type="Resource" id="InputA"]
+script = ExtResource("2")
+id = &"a"
+gate_type = 0
+initial_value = true
+label_key = "rune.input_a.name"
+locked = true
+layout_position = Vector2(0.12, 0.25)
+
+[sub_resource type="Resource" id="InputB"]
+script = ExtResource("2")
+id = &"b"
+gate_type = 0
+initial_value = false
+label_key = "rune.input_b.name"
+locked = true
+layout_position = Vector2(0.12, 0.72)
+
+[sub_resource type="Resource" id="Slot"]
+script = ExtResource("2")
+id = &"slot"
+gate_type = 5
+input_node_ids = Array[StringName]([&"a", &"b"])
+layout_position = Vector2(0.48, 0.48)
+label_key = "rune.slot.first.name"
+
+[sub_resource type="Resource" id="Output"]
+script = ExtResource("2")
+id = &"output"
+gate_type = 4
+input_node_ids = Array[StringName]([&"slot"])
+layout_position = Vector2(0.84, 0.48)
+
+[resource]
+script = ExtResource("1")
+id = "runes_04"
+title_key = "puzzle.runes_04.title"
+intro_key = "puzzle.runes_04.intro"
+mode = 1
+nodes = Array[ExtResource("2")]([SubResource("InputA"), SubResource("InputB"), SubResource("Slot"), SubResource("Output")])
+tray = Array[int]([1, 2])
+target_value = false
+output_node_id = &"output"
+par_moves = 1
+three_star_moves = 1
+two_star_moves = 2
+one_star_moves = 4
+clue_1_key = "puzzle.runes_04.clue_1"
+clue_2_key = "puzzle.runes_04.clue_2"
+clue_3_key = "puzzle.runes_04.clue_3"

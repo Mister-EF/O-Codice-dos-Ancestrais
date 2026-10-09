@@ -1,0 +1,72 @@
+[gd_resource type="Resource" script_class="RuneLevel" load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://features/rune_logic/rune_level.gd" id="1"]
+[ext_resource type="Script" path="res://features/rune_logic/rune_node_def.gd" id="2"]
+
+[sub_resource type="Resource" id="InputA"]
+script = ExtResource("2")
+id = &"a"
+gate_type = 0
+initial_value = true
+label_key = "rune.input_a.name"
+locked = true
+layout_position = Vector2(0.10, 0.2)
+
+[sub_resource type="Resource" id="InputB"]
+script = ExtResource("2")
+id = &"b"
+gate_type = 0
+initial_value = false
+label_key = "rune.input_b.name"
+locked = true
+layout_position = Vector2(0.10, 0.5)
+
+[sub_resource type="Resource" id="InputC"]
+script = ExtResource("2")
+id = &"c"
+gate_type = 0
+initial_value = true
+label_key = "rune.input_c.name"
+locked = true
+layout_position = Vector2(0.10, 0.8)
+
+[sub_resource type="Resource" id="FirstSlot"]
+script = ExtResource("2")
+id = &"first"
+gate_type = 5
+input_node_ids = Array[StringName]([&"a", &"b"])
+layout_position = Vector2(0.4, 0.35)
+label_key = "rune.slot.first.name"
+
+[sub_resource type="Resource" id="SecondSlot"]
+script = ExtResource("2")
+id = &"second"
+gate_type = 5
+input_node_ids = Array[StringName]([&"first", &"c"])
+layout_position = Vector2(0.65, 0.65)
+label_key = "rune.slot.second.name"
+
+[sub_resource type="Resource" id="Output"]
+script = ExtResource("2")
+id = &"output"
+gate_type = 4
+input_node_ids = Array[StringName]([&"second"])
+layout_position = Vector2(0.88, 0.5)
+
+[resource]
+script = ExtResource("1")
+id = "runes_06"
+title_key = "puzzle.runes_06.title"
+intro_key = "puzzle.runes_06.intro"
+mode = 1
+nodes = Array[ExtResource("2")]([SubResource("InputA"), SubResource("InputB"), SubResource("InputC"), SubResource("FirstSlot"), SubResource("SecondSlot"), SubResource("Output")])
+tray = Array[int]([1, 2])
+target_value = true
+output_node_id = &"output"
+par_moves = 2
+three_star_moves = 2
+two_star_moves = 3
+one_star_moves = 5
+clue_1_key = "puzzle.runes_06.clue_1"
+clue_2_key = "puzzle.runes_06.clue_2"
+clue_3_key = "puzzle.runes_06.clue_3"

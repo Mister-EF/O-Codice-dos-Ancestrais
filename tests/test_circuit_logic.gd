@@ -91,7 +91,7 @@ func _test_solved_hint_and_moves() -> void:
 	_check(logic.register_hint(), "hint can be recorded")
 	_check(logic.hints_used == 1 and logic.moves == 0, "hint use is tracked separately from rotations")
 	logic.rotate_tile(hint)
-	_check(logic.moves == 2, "rotating a tile increments moves")
+	_check(logic.moves == 1, "rotating a tile increments moves")
 	logic.set_solution_layout()
 	_check(logic.is_solved(), "authored solution powers all required targets")
 	_check(logic.get_hint() == CircuitLogic.INVALID_CELL, "solved layout has no hint")

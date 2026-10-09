@@ -1,8 +1,8 @@
 [gd_scene load_steps=2 format=3]
 
-[ext_resource type="Script" path="res://features/memory_board/memory_board_debug.gd" id="1"]
+[ext_resource type="Script" path="res://features/rune_logic/rune_puzzle.gd" id="1"]
 
-[node name="MemoryBoardDebug" type="Control"]
+[node name="RunePuzzle" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
