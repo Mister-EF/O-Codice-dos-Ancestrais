@@ -26,6 +26,13 @@ func _init() -> void:
 	_test_faction_id_mapping()
 	_test_faction_selection_persistence()
 	_test_puzzle_result_creation()
+	_test_rune_gate_truth_tables()
+	_test_rune_chained_evaluation()
+	_test_rune_cycle_detection()
+	_test_rune_levels_are_solvable()
+	_test_rune_truth_table_answers()
+	_test_rune_hint_and_stars()
+	_test_rune_place_hint_and_star_thresholds()
 
 	print("\n── Results: %d passed, %d failed ──" % [_passed, _failed])
 	if _failed > 0:
@@ -343,6 +350,176 @@ func _test_puzzle_result_creation() -> void:
 	_assert_eq(pr.stars, 3, "stars set")
 	_assert_eq(pr.moves, 12, "moves set")
 	_assert_eq(pr.hints_used, 1, "hints_used set")
+
+
+func _test_rune_gate_truth_tables() -> void:
+	print("TEST: Rune AND/OR/NOT truth tables")
+	var and_level: RuneLevel = _make_rune_test_level(RuneGateType.Type.AND, [&"A", &"B"])
+	var and_logic: RuneLogic = RuneLogic.new(and_level)
+	for mask: int in range(4):
+		and_logic._input_values[&"A"] = (mask & 2) != 0
+		and_logic._input_values[&"B"] = (mask & 1) != 0
+		var and_values: Dictionary[StringName, bool] = and_logic.evaluate()
+		_assert_eq(and_values[&"OUT"], mask == 3, "AND row %d" % mask)
+	var or_level: RuneLevel = _make_rune_test_level(RuneGateType.Type.OR, [&"A", &"B"])
+	var or_logic: RuneLogic = RuneLogic.new(or_level)
+	for mask: int in range(4):
+		or_logic._input_values[&"A"] = (mask & 2) != 0
+		or_logic._input_values[&"B"] = (mask & 1) != 0
+		var or_values: Dictionary[StringName, bool] = or_logic.evaluate()
+		_assert_eq(or_values[&"OUT"], mask != 0, "OR row %d" % mask)
+	var not_level: RuneLevel = _make_rune_test_level(RuneGateType.Type.NOT, [&"A"])
+	var not_logic: RuneLogic = RuneLogic.new(not_level)
+	for input_value: bool in [false, true]:
+		not_logic._input_values[&"A"] = input_value
+		var not_values: Dictionary[StringName, bool] = not_logic.evaluate()
+		_assert_eq(not_values[&"OUT"], not input_value, "NOT row %s" % str(input_value))
+
+
+func _test_rune_cycle_detection() -> void:
+	print("TEST: Rune cycle detection")
+	var cycle_level: RuneLevel = RuneLevel.new()
+	cycle_level.id = "cycle_test"
+	var node_a: RuneNodeData = RuneNodeData.new()
+	node_a.id = &"A"
+	node_a.gate_type = RuneGateType.Type.AND
+	node_a.input_ids = [&"B", &"B"]
+	var node_b: RuneNodeData = RuneNodeData.new()
+	node_b.id = &"B"
+	node_b.gate_type = RuneGateType.Type.OR
+	node_b.input_ids = [&"A", &"A"]
+	cycle_level.nodes = [node_a, node_b]
+	cycle_level.tray = []
+	cycle_level.par_moves = 1
+	var cycle_logic: RuneLogic = RuneLogic.new(cycle_level)
+	var cycle_values: Dictionary[StringName, bool] = cycle_logic.evaluate()
+	_assert_eq(cycle_values.is_empty(), true, "cycle returns empty evaluation")
+	_assert_eq(cycle_logic.last_error, "cycle", "cycle error exposed")
+
+
+func _test_rune_chained_evaluation() -> void:
+	print("TEST: Chained rune evaluation")
+	var level: RuneLevel = ResourceLoader.load("res://data/puzzles/runes/runes_03.tres") as RuneLevel
+	var logic: RuneLogic = RuneLogic.new(level)
+	var initial_values: Dictionary[StringName, bool] = logic.evaluate()
+	_assert_eq(initial_values[&"G1"], true, "AND evaluates before chained OR")
+	_assert_eq(initial_values[&"OUT"], true, "chained output is initially TRUE")
+	_assert_eq(logic.toggle_input(&"A"), true, "chained input can be toggled")
+	var updated_values: Dictionary[StringName, bool] = logic.evaluate()
+	_assert_eq(updated_values[&"G1"], false, "AND branch updates live")
+	_assert_eq(updated_values[&"OUT"], false, "chained output updates live")
+
+
+func _test_rune_levels_are_solvable() -> void:
+	print("TEST: Shipped rune levels are solvable")
+	var level_files: PackedStringArray = DirAccess.get_files_at("res://data/puzzles/runes")
+	var level_count: int = 0
+	for file_name: String in level_files:
+		if not file_name.ends_with(".tres"):
+			continue
+		var loaded: Resource = ResourceLoader.load("res://data/puzzles/runes/" + file_name)
+		if not loaded is RuneLevel:
+			_fail("Rune resource failed to load: %s" % file_name)
+			continue
+		var rune_level: RuneLevel = loaded as RuneLevel
+		level_count += 1
+		_assert_eq(rune_level.validate_level(), true, "%s validates" % rune_level.id)
+		if rune_level.mode == RuneLevel.Mode.TRUTH_TABLE:
+			var table: TruthTableLogic = TruthTableLogic.new(rune_level)
+			var generated_rows: Array[Dictionary] = table.generate_rows()
+			var known_rows_match: bool = true
+			for row_index: int in range(rune_level.truth_table_outputs.size()):
+				var actual_output: int = 1 if generated_rows[row_index]["output"] else 0
+				if rune_level.truth_table_outputs[row_index] == -1:
+					table.set_answer(row_index, actual_output == 1)
+				elif rune_level.truth_table_outputs[row_index] != actual_output:
+					known_rows_match = false
+			_assert_eq(known_rows_match and table.validate_answers(), true, "%s truth table is solvable" % rune_level.id)
+		else:
+			var rune_logic: RuneLogic = RuneLogic.new(rune_level)
+			_assert_eq(rune_logic.brute_force_solve(), true, "%s has a solution" % rune_level.id)
+	_assert_eq(level_count, 10, "all ten rune levels loaded")
+
+
+func _test_rune_truth_table_answers() -> void:
+	print("TEST: Truth table answer validation")
+	var truth_level: RuneLevel = ResourceLoader.load("res://data/puzzles/runes/runes_07.tres") as RuneLevel
+	var truth_logic: TruthTableLogic = TruthTableLogic.new(truth_level)
+	_assert_eq(truth_logic.is_complete(), false, "blank cells are incomplete")
+	_assert_eq(truth_logic.cycle_answer(1), true, "answer cell can be cycled")
+	_assert_eq(truth_logic.generate_rows()[1]["answer"], 1, "blank cell first selects TRUE")
+	_assert_eq(truth_logic.cycle_answer(1), true, "TRUE answer can be changed")
+	_assert_eq(truth_logic.generate_rows()[1]["answer"], 0, "second tap selects FALSE")
+	_assert_eq(truth_logic.set_answer(1, true), true, "answer can be changed to an incorrect value")
+	_assert_eq(truth_logic.validate_answers(), false, "incorrect table answer is rejected")
+	_assert_eq(truth_logic.set_answer(1, false), true, "FALSE answer can be set")
+	_assert_eq(truth_logic.set_answer(2, false), true, "second answer can be set")
+	_assert_eq(truth_logic.validate_answers(), true, "AND truth table answers validate")
+	_assert_eq(truth_logic.is_complete(), true, "answered table is complete")
+
+
+func _test_rune_hint_and_stars() -> void:
+	print("TEST: Rune hints and star thresholds")
+	var level: RuneLevel = ResourceLoader.load("res://data/puzzles/runes/runes_01.tres") as RuneLevel
+	var logic: RuneLogic = RuneLogic.new(level)
+	var hint: Dictionary = logic.get_hint()
+	_assert_eq(hint.get("kind", ""), "input", "hint points to an input")
+	_assert_eq(hint.get("value", false), false, "hint proposes a solving input state")
+	_assert_eq(logic.toggle_input(hint["node_id"] as StringName), true, "hinted input can be changed")
+	_assert_eq(logic.is_solved(), true, "hinted change solves level")
+	_assert_eq(logic.get_stars(), 3, "par move awards three stars")
+	_assert_eq(logic.moves, 1, "one change counts as one move")
+
+
+func _test_rune_place_hint_and_star_thresholds() -> void:
+	print("TEST: PLACE_GATES hint and star thresholds")
+	var boss_level: RuneLevel = ResourceLoader.load("res://data/puzzles/runes/runes_10.tres") as RuneLevel
+	var boss_logic: RuneLogic = RuneLogic.new(boss_level)
+	var first_hint: Dictionary = boss_logic.get_hint()
+	_assert_eq(first_hint.get("kind", ""), "gate", "multi-step hint proposes a gate")
+	_assert_eq(first_hint.get("node_id", &""), &"S1", "hint selects the first empty slot")
+	_assert_eq(first_hint.get("gate_type", RuneGateType.Type.EMPTY_SLOT), RuneGateType.Type.AND, "hint gate participates in a solution")
+	_assert_eq(boss_logic.place_gate(&"S1", RuneGateType.Type.AND), true, "hinted gate can be placed")
+	_assert_eq(boss_logic.brute_force_solve(), true, "solver handles an already placed gate")
+	_assert_eq(boss_logic.get_gate_type(&"S1"), RuneGateType.Type.AND, "solver preserves the placed gate")
+	var second_hint: Dictionary = boss_logic.get_hint()
+	_assert_eq(second_hint.get("node_id", &""), &"S2", "next hint advances to the dependent slot")
+	_assert_eq(boss_logic.place_gate(&"S2", second_hint.get("gate_type", RuneGateType.Type.EMPTY_SLOT) as RuneGateType.Type), true, "second hinted gate can be placed")
+	_assert_eq(boss_logic.is_solved(), true, "hinted mixed boss arrangement solves")
+	_assert_eq(boss_logic.get_stars(), 3, "boss completed at par earns three stars")
+	_assert_eq(boss_logic.remove_gate(&"S2"), true, "placed gate can be removed")
+	_assert_eq(boss_logic.get_remaining_tray().size(), 1, "removed gate returns to tray")
+
+	var threshold_level: RuneLevel = ResourceLoader.load("res://data/puzzles/runes/runes_02.tres") as RuneLevel
+	var threshold_logic: RuneLogic = RuneLogic.new(threshold_level)
+	threshold_logic.toggle_input(&"A")
+	threshold_logic.toggle_input(&"B")
+	_assert_eq(threshold_logic.get_stars(), 2, "two moves earn two stars")
+	threshold_logic.toggle_input(&"A")
+	_assert_eq(threshold_logic.get_stars(), 1, "over the two-star threshold earns one star")
+
+
+func _make_rune_test_level(gate_type: RuneGateType.Type, inputs: Array[StringName]) -> RuneLevel:
+	var test_level: RuneLevel = RuneLevel.new()
+	test_level.id = "gate_test"
+	test_level.target_value = true
+	test_level.par_moves = 1
+	var node_a: RuneNodeData = RuneNodeData.new()
+	node_a.id = &"A"
+	node_a.gate_type = RuneGateType.Type.INPUT
+	var node_b: RuneNodeData = RuneNodeData.new()
+	node_b.id = &"B"
+	node_b.gate_type = RuneGateType.Type.INPUT
+	var gate: RuneNodeData = RuneNodeData.new()
+	gate.id = &"G"
+	gate.gate_type = gate_type
+	gate.input_ids = inputs
+	var output: RuneNodeData = RuneNodeData.new()
+	output.id = &"OUT"
+	output.gate_type = RuneGateType.Type.OUTPUT
+	output.input_ids = [&"G"]
+	test_level.nodes = [node_a, node_b, gate, output]
+	return test_level
 
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
